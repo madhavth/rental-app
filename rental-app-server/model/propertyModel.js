@@ -27,7 +27,7 @@ const propertySchema = new mongoose.Schema({
     }
 });
 
-propertySchema.index({location: '2dsphere'});
+propertySchema.index({location: '2d'});
 
 const property = mongoose.model('Property', propertySchema);
 

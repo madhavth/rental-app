@@ -60,7 +60,6 @@ module.exports.getTrendingProperties = async (req, res, next) => {
             .skip(size * page);
         res.json({success: true, data: properties});
     } catch (e) {
-        console.log(e);
         next(new Error('Error while fetching most viewed properties'));
     }
 }
@@ -76,7 +75,7 @@ module.exports.getPropertyById = async (req, res, next) => {
         });
         res.json({success: true, data: property});
     } catch (e) {
-        next(new Error('Error while fetching property '));
+        next(new Error('Error while fetching property'));
     }
 
 }
