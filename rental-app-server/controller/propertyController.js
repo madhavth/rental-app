@@ -5,7 +5,7 @@ module.exports.getAllProperties = async (req, res, next) => {
         const properties = await Property.find({}, {
             __v: 0
         });
-        res.json(properties);
+        res.json({success: true, data: properties});
     } catch (e) {
         next(new Error('Error while fetching all properties'));
     }
@@ -20,7 +20,7 @@ module.exports.getPropertyById = async (req, res, next) => {
         }, {
             __v : 0
         });
-        res.json(property);
+        res.json({success: true, data: property});
     } catch (e) {
         next(new Error('Error while fetching property '));
     }
@@ -30,7 +30,8 @@ module.exports.getPropertyById = async (req, res, next) => {
 module.exports.deletePropertyById = async (req, res, next) => {
     try {
         const propertyId = req.params.property_id;
-        return await Property.deleteOne({_id: propertyId});
+        await Property.deleteOne({_id: propertyId});
+        res.json({success:true, message: 'Deleted property successfully'});
     } catch (e) {
         next(new Error('Error while deleting property'));
     }

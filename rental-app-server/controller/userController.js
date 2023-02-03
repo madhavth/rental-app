@@ -18,7 +18,7 @@ const login = async (req, res, next) => {
         },
         process.env.SECRET
       );
-      res.json({ success: true, accessToken });
+      res.json({ success: true, data: accessToken });
     } else {
       return next(new Error("Invalid Credentials"));
     }
@@ -34,7 +34,7 @@ const signup = async (req, res, next) => {
       ...newUser,
       password: hashedPassword,
     });
-    res.json({ success: true, results });
+    res.json({ success: true, data: results });
   } catch (error) {
     next(error);
   }
