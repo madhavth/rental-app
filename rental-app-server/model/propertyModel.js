@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 
 const propertySchema = new mongoose.Schema({
   name: String,
-  location: {
-    index: "2dsphere",
+  price: Number,
+    overall_rating: Number,
+    location: {
+        index: "2dsphere",
     type: [Number],
   },
   reviews: [
@@ -26,7 +28,7 @@ const propertySchema = new mongoose.Schema({
     bathrooms: { type: Number, default: 0 },
     beds: { type: Number, default: 0 },
   },
-});
+}, {timestamps: true});
 
 propertySchema.index({ location: "2d" });
 

@@ -1,49 +1,94 @@
 const { uploadImage } = require("../config/cloudinary");
 const Property = require("../model/propertyModel");
 
-const defaultPerPage = 1;
+const defaultPerPage = 10;
 
-const getMetaData = async (req, res) => {
-  const page = req.query.page || 0;
-  const size = req.query.size || defaultPerPage;
+const applyFilters = (req, res) => {
+    const query = {};
 
-  const totalDocuments = await Property.countDocuments({});
-  const remaining = totalDocuments - (+page + 1) * +size;
+    if(!req.query.show_all) {
+        query.user_id = {
+            $ne: req.userData.userId
+        }
+    }
+    
+    if (req.query.view_count_lt) {
+        query.view_count = {
+            $lt: req.query.view_count_lt,
+        };
+    }
 
-  return {
-    page: req.query.page || 0,
-    size: req.query.size || defaultPerPage,
-    total: await Property.countDocuments({}),
-    remaining: remaining > 0 ? remaining : 0,
-  };
+    if (req.query.view_count_gt) {
+        query.view_count = {
+            $gt: req.query.view_count_gt,
+            ...query.view_count
+        };
+    }
+
+    if (req.query.rating_gt) {
+        query.overall_rating = {
+            $gt: req.query.rating_gt,
+        }
+    }
+
+    if (req.query.rating_lt) {
+        query.overall_rating = {
+            $lt: req.query.rating_lt,
+            ...query.rating
+        }
+    }
+
+    return query;
 };
 
-const paginatedResult = async (req, res, next, query) => {
-  const page = req.query.page || 0;
-  const size = req.query.size || defaultPerPage;
+const getMetaData = async (Model, req, res) => {
+    const page = +req.query.page || 0;
+    const size = +req.query.size || defaultPerPage;
 
-  const properties = await Property.find(query, {
-    __v: 0,
-  })
-    .limit(size)
-    .skip(size * page);
+    const totalDocuments = await Model.countDocuments({});
+    const remaining = totalDocuments - (page + 1) * size;
 
-  return {
-    success: true,
-    data: {
-      properties: properties,
-      metadata: await getMetaData(req, res),
-    },
-  };
-};
+    return {
+        page: page,
+        size: +size,
+        total: +totalDocuments,
+        remaining: remaining > 0 ? remaining : 0
+    };
+}
+
+const paginatedResult = async (Model, req, res, next, query, sort) => {
+    const page = req.query.page || 0;
+    const size = req.query.size || defaultPerPage;
+
+    const queries = applyFilters(req, res);
+
+    const properties = await Model.find({...query, ...queries}, {
+        __v: 0
+    }).limit(size)
+        .skip(size * page);
+
+    if (sort) {
+        properties.sort(sort);
+    }
+
+    return {
+        success: true,
+        data: {
+            properties: properties,
+            metadata: await getMetaData(Property,req, res),
+        }
+    }
+}
+
 
 module.exports.getAllProperties = async (req, res, next) => {
-  try {
-    const result = await paginatedResult(req, res, next, {});
-    res.json(result);
-  } catch (e) {
-    next(new Error("Error while fetching all properties"));
-  }
+    try {
+
+        const result = await paginatedResult(Property, req, res, next, {});
+        res.json(result);
+    } catch (e) {
+        next(new Error('Error while fetching all properties'));
+    }
 };
 
 module.exports.getNearByProperties = async (req, res, next) => {
@@ -71,28 +116,15 @@ module.exports.getNearByProperties = async (req, res, next) => {
 };
 
 module.exports.getTrendingProperties = async (req, res, next) => {
-  try {
-    const page = req.query.page || 0;
-    const size = req.query.size || defaultPerPage;
+    try {
 
-    const properties = await Property.find(
-      {},
-      {
-        __v: 0,
-      }
-    )
-      .sort({ view_count: -1 })
-      .limit(size)
-      .skip(size * page);
-    res.json({
-      success: true,
-      data: properties,
-      metadata: await getMetaData(req, res),
-    });
-  } catch (e) {
-    next(new Error("Error while fetching most viewed properties"));
-  }
-};
+        const results = await paginatedResult(Property, req, res, next, {}, {view_count: -1});
+        res.json(results);
+    } catch (e) {
+        next(new Error('Error while fetching most viewed properties'));
+    }
+}
+
 
 module.exports.getPropertyById = async (req, res, next) => {
   try {

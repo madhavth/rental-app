@@ -7,6 +7,7 @@ const cors = require("cors");
 const { databaseConnection } = require("./database/database");
 const userRoute = require("./route/userRoute");
 const propertyRoute = require("./route/propertyRoute");
+const {requireAuthorization} = require("./middleware/authorization");
 
 dotenv.config({
   path: "./.env",
@@ -27,8 +28,9 @@ app.use(
   })
 );
 // app.use("/api/users", );
-app.use("/api/properties", propertyRoute);
 app.use("/api/users", userRoute);
+
+app.use('/api/properties', propertyRoute);
 
 app.all("*", (req, res, next) => {
   next(new Error(`Route Not found`));
