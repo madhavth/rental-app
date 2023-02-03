@@ -5,6 +5,7 @@ const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
 const { databaseConnection } = require("./database/database");
+const userRoute = require("./route/userRoute");
 dotenv.config({
   path: "./.env",
 });
@@ -23,7 +24,7 @@ app.use(
     });
   })
 );
-// app.use("/api/users", );
+app.use("/api/users", userRoute);
 
 app.all("*", (req, res, next) => {
   next(new Error(`Route Not found`));
