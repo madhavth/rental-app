@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { databaseConnection } = require("./database/database");
 const userRoute = require("./route/userRoute");
+const propertyRouter = require('./route/propertyRoute');
+
 dotenv.config({
   path: "./.env",
 });
@@ -24,6 +26,8 @@ app.use(
     });
   })
 );
+// app.use("/api/users", );
+app.use('/property', propertyRouter);
 app.use("/api/users", userRoute);
 
 app.all("*", (req, res, next) => {
