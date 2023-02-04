@@ -8,6 +8,7 @@ const { databaseConnection } = require("./database/database");
 const userRoute = require("./route/userRoute");
 const propertyRoute = require("./route/propertyRoute");
 const { requireAuthorization } = require("./middleware/authorization");
+const adminRoute = require("./route/adminRoute");
 
 dotenv.config({
   path: "./.env",
@@ -32,6 +33,8 @@ app.use(
 app.use("/api/users", userRoute);
 
 app.use("/api/properties", propertyRoute);
+
+app.use("/api/admin", adminRoute);
 
 app.all("*", (req, res, next) => {
   next(new Error(`Route Not found`));
