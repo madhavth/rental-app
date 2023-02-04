@@ -1,22 +1,38 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { CardComponent } from './components/card/card.component';
-import { CarouselComponent } from './components/carousel/carousel.component';
-import { SliderComponent } from './components/slider/slider.component';
-
+import { HeaderComponent } from './common/header/header.component';
+import { FooterComponent } from './common/footer/footer.component';
 @NgModule({
-  declarations: [
-    AppComponent,
-    CardComponent,
-    CarouselComponent,
-    SliderComponent
-  ],
+  declarations: [AppComponent, HeaderComponent, FooterComponent],
   imports: [
-    BrowserModule
+    BrowserModule,
+    RouterModule.forRoot([
+      {
+        path: '',
+        loadChildren: () =>
+          import('./modules/home/home.module').then(
+            (module) => module.HomeModule
+          ),
+      },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./modules/user/user.module').then(
+            (module) => module.UserModule
+          ),
+      },
+      {
+        path: 'properties',
+        loadChildren: () =>
+          import('./modules/property/property.module').then(
+            (module) => module.PropertyModule
+          ),
+      },
+    ]),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

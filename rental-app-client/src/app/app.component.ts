@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Property } from './model/property';
-import { Utils } from './utils/Utils';
-
 @Component({
   selector: 'app-root',
-  template: '<p>Best Of Luck</p>',
+  template: `
+    <app-header></app-header>
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+  `,
   styles: [],
 })
 export class AppComponent {}
