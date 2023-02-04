@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <app-header></app-header>
-    <router-outlet></router-outlet>
+    <div class="container mx-auto">
+      <router-outlet></router-outlet>
+    </div>
     <app-footer></app-footer>
   `,
   styles: [],
