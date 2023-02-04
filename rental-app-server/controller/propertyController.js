@@ -6,7 +6,7 @@ const defaultPerPage = 10;
 const applyFilters = (req, res) => {
     const query = {};
 
-    if(!req.query.show_all) {
+    if(!req.query.show_all && req.userData) {
         query.user_id = {
             $ne: req.userData.userId
         }
@@ -65,11 +65,8 @@ const paginatedResult = async (Model, req, res, next, query, sort) => {
     const properties = await Model.find({...query, ...queries}, {
         __v: 0
     }).limit(size)
-        .skip(size * page);
-
-    if (sort) {
-        properties.sort(sort);
-    }
+        .skip(size * page)
+        .sort(sort);
 
     return {
         success: true,
@@ -108,7 +105,7 @@ module.exports.getNearByProperties = async (req, res, next) => {
       },
     };
 
-    const results = await paginatedResult(req, res, next, query);
+    const results = await paginatedResult(Property, req, res, next, query);
     res.json(results);
   } catch (e) {
     next(new Error("Error while fetching nearby properties"));
@@ -117,10 +114,10 @@ module.exports.getNearByProperties = async (req, res, next) => {
 
 module.exports.getTrendingProperties = async (req, res, next) => {
     try {
-
         const results = await paginatedResult(Property, req, res, next, {}, {view_count: -1});
         res.json(results);
     } catch (e) {
+        console.log(e);
         next(new Error('Error while fetching most viewed properties'));
     }
 }

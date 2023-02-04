@@ -11,9 +11,10 @@ const {
     getTrendingProperties,
     uploadPropertyImages,
 } = require("../controller/propertyController");
+const checkLongLat = require("../middleware/checkLongLat");
 
 router.get("/", getAllProperties);
-router.get("/nearby", getNearByProperties);
+router.get("/nearby", checkLongLat, getNearByProperties);
 router.get("/trending", getTrendingProperties);
 
 router.get("/:property_id", getPropertyById);
