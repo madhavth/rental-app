@@ -1,6 +1,12 @@
 const bcrypt = require("bcrypt");
 const userModel = require("../model/userModel");
 const jwt = require("jsonwebtoken");
+const Property = require("../model/propertyModel");
+const {
+  getUserOnlyProperties,
+  paginatedResult,
+} = require("./propertyController");
+
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -39,4 +45,22 @@ const signup = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { login, signup };
+
+const userProperties = async (req, res, next) => {
+  try {
+    const result = await paginatedResult(
+      Property,
+      req,
+      res,
+      next,
+      { user_id: req.userData.userId },
+      {},
+      true
+    );
+    res.json(result);
+  } catch (e) {
+    next(new Error("Error while fetching user properties"));
+  }
+};
+
+module.exports = { login, signup, userProperties };

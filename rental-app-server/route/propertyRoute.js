@@ -13,6 +13,11 @@ const {
 } = require("../controller/propertyController");
 const checkLongLat = require("../middleware/checkLongLat");
 const reviewsRoute = require("../route/reviewsRoute");
+const {
+  onlyGetRequestWithoutAuth,
+} = require("../middleware/onlyGetRequestAllowedWithoutAuth");
+
+router.use(onlyGetRequestWithoutAuth);
 
 router.get("/", getAllProperties);
 router.get("/nearby", checkLongLat, getNearByProperties);

@@ -3,89 +3,97 @@ const Property = require("../model/propertyModel");
 
 const defaultPerPage = 10;
 
-const applyFilters = (req, res) => {
-    const query = {};
+const applyFilters = (req, res, show_all = req.query.show_all) => {
+  const query = {};
+  show_all = show_all ? show_all : show_all === "true";
 
-    if(!req.query.show_all && req.userData) {
-        query.user_id = {
-            $ne: req.userData.userId
-        }
-    }
-    
-    if (req.query.view_count_lt) {
-        query.view_count = {
-            $lt: req.query.view_count_lt,
-        };
-    }
+  if (!show_all && req.userData) {
+    query.user_id = {
+      $ne: req.userData.userId,
+    };
+  }
 
-    if (req.query.view_count_gt) {
-        query.view_count = {
-            $gt: req.query.view_count_gt,
-            ...query.view_count
-        };
-    }
+  if (req.query.view_count_lt) {
+    query.view_count = {
+      $lt: req.query.view_count_lt,
+    };
+  }
 
-    if (req.query.rating_gt) {
-        query.overall_rating = {
-            $gt: req.query.rating_gt,
-        }
-    }
+  if (req.query.view_count_gt) {
+    query.view_count = {
+      $gt: req.query.view_count_gt,
+      ...query.view_count,
+    };
+  }
 
-    if (req.query.rating_lt) {
-        query.overall_rating = {
-            $lt: req.query.rating_lt,
-            ...query.rating
-        }
-    }
+  if (req.query.rating_gt) {
+    query.overall_rating = {
+      $gt: req.query.rating_gt,
+    };
+  }
 
-    return query;
+  if (req.query.rating_lt) {
+    query.overall_rating = {
+      $lt: req.query.rating_lt,
+      ...query.rating,
+    };
+  }
+
+  return query;
 };
 
-const getMetaData = async (Model, req, res) => {
-    const page = +req.query.page || 0;
-    const size = +req.query.size || defaultPerPage;
+const getMetaData = async (Model, req, res, query = {}) => {
+  const page = +req.query.page || 0;
+  const size = +req.query.size || defaultPerPage;
 
-    const totalDocuments = await Model.countDocuments({});
-    const remaining = totalDocuments - (page + 1) * size;
+  const totalDocuments = await Model.countDocuments(query);
+  const remaining = totalDocuments - (page + 1) * size;
 
-    return {
-        page: page,
-        size: +size,
-        total: +totalDocuments,
-        remaining: remaining > 0 ? remaining : 0
-    };
-}
+  return {
+    page: page,
+    size: +size,
+    total: +totalDocuments,
+    remaining: remaining > 0 ? remaining : 0,
+  };
+};
 
-const paginatedResult = async (Model, req, res, next, query, sort) => {
-    const page = req.query.page || 0;
-    const size = req.query.size || defaultPerPage;
+const paginatedResult = async (Model, req, res, next, query, sort, showAll) => {
+  const page = req.query.page || 0;
+  const size = req.query.size || defaultPerPage;
 
-    const queries = applyFilters(req, res);
+  const queries = applyFilters(req, res, showAll);
 
-    const properties = await Model.find({...query, ...queries}, {
-        __v: 0
-    }).limit(size)
-        .skip(size * page)
-        .sort(sort);
-
-    return {
-        success: true,
-        data: {
-            properties: properties,
-            metadata: await getMetaData(Property,req, res),
-        }
+  const properties = await Model.find(
+    { ...query, ...queries },
+    {
+      __v: 0,
     }
-}
+  )
+    .limit(size)
+    .skip(size * page)
+    .sort(sort);
 
+  return {
+    success: true,
+    data: {
+      properties: properties,
+      metadata: await getMetaData(Property, req, res, { ...query, ...queries }),
+    },
+  };
+};
+
+module.exports.paginatedResult = paginatedResult;
 
 module.exports.getAllProperties = async (req, res, next) => {
-    try {
-
-        const result = await paginatedResult(Property, req, res, next, {});
-        res.json(result);
-    } catch (e) {
-        next(new Error('Error while fetching all properties'));
-    }
+  try {
+    const result = await paginatedResult(Property, req, res, next, {
+      is_verified: true,
+      is_rented: false,
+    });
+    res.json(result);
+  } catch (e) {
+    next(new Error("Error while fetching all properties"));
+  }
 };
 
 module.exports.getNearByProperties = async (req, res, next) => {
@@ -94,6 +102,8 @@ module.exports.getNearByProperties = async (req, res, next) => {
     const latitude = req.query.latitude;
 
     const query = {
+      is_verified: true,
+      is_rented: false,
       location: {
         $near: {
           $geometry: {
@@ -113,15 +123,24 @@ module.exports.getNearByProperties = async (req, res, next) => {
 };
 
 module.exports.getTrendingProperties = async (req, res, next) => {
-    try {
-        const results = await paginatedResult(Property, req, res, next, {}, {view_count: -1});
-        res.json(results);
-    } catch (e) {
-        console.log(e);
-        next(new Error('Error while fetching most viewed properties'));
-    }
-}
-
+  try {
+    const results = await paginatedResult(
+      Property,
+      req,
+      res,
+      next,
+      {
+        is_verified: true,
+        is_rented: false,
+      },
+      { view_count: -1 }
+    );
+    res.json(results);
+  } catch (e) {
+    console.log(e);
+    next(new Error("Error while fetching most viewed properties"));
+  }
+};
 
 module.exports.getPropertyById = async (req, res, next) => {
   try {
@@ -136,7 +155,7 @@ module.exports.getPropertyById = async (req, res, next) => {
     );
     res.json({ success: true, data: property });
   } catch (e) {
-      console.log(e);
+    console.log(e);
     next(new Error("Error while fetching property"));
   }
 };
@@ -144,7 +163,7 @@ module.exports.getPropertyById = async (req, res, next) => {
 module.exports.deletePropertyById = async (req, res, next) => {
   try {
     const propertyId = req.params.property_id;
-    await Property.deleteOne({ _id: propertyId });
+    await Property.deleteOne({ _id: propertyId, user_id: req.userData.userId });
     res.json({ success: true, message: "Deleted property successfully" });
   } catch (e) {
     next(new Error("Error while deleting property"));
@@ -153,7 +172,9 @@ module.exports.deletePropertyById = async (req, res, next) => {
 
 module.exports.addProperty = async (req, res, next) => {
   try {
+    // don't allow to update these fields
     req.body.view_count = undefined;
+    req.body.is_verified = undefined;
 
     const property = new Property(req.body);
     await property.save();
@@ -226,6 +247,7 @@ module.exports.updateProperty = async (req, res, next) => {
     await Property.updateOne(
       {
         _id: id,
+        user_id: req.userData.userId,
       },
       {
         $set: {

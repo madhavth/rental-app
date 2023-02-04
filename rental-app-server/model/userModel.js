@@ -10,6 +10,11 @@ const UserSchema = mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    favorite_properties: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );
