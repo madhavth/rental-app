@@ -136,6 +136,7 @@ module.exports.getPropertyById = async (req, res, next) => {
     );
     res.json({ success: true, data: property });
   } catch (e) {
+      console.log(e);
     next(new Error("Error while fetching property"));
   }
 };
@@ -162,23 +163,6 @@ module.exports.addProperty = async (req, res, next) => {
     });
   } catch (e) {
     next(new Error("Error while adding new property"));
-  }
-};
-
-module.exports.getPropertyById = async (req, res, next) => {
-  try {
-    const propertyId = req.params.property_id;
-    const property = await Property.findOne(
-      {
-        _id: propertyId,
-      },
-      {
-        __v: 0,
-      }
-    );
-    res.json({ success: true, data: property });
-  } catch (e) {
-    next(new Error("Error while fetching property "));
   }
 };
 
