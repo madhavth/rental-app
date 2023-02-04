@@ -1,4 +1,12 @@
 const jwt = require("jsonwebtoken");
+
+const getUserData = (req, res) => {
+  const authString = req.headers["authorization"];
+  if (!authString) return {};
+  const jwtClient = authString.split(" ")[1];
+  return jwt.verify(jwtClient, process.env.SECRET);
+};
+
 const requireAuthorization = async (req, res, next) => {
   try {
     const authString = req.headers["authorization"];
@@ -24,4 +32,4 @@ const checkAdmin = (req, res, next) => {
   }
   next();
 };
-module.exports = { requireAuthorization, checkUser, checkAdmin };
+module.exports = { requireAuthorization, checkUser, checkAdmin, getUserData };

@@ -197,19 +197,6 @@ module.exports.deletePropertyById = async (req, res, next) => {
   }
 };
 
-module.exports.addProperty = async (req, res, next) => {
-  try {
-    const property = new Property(req.body);
-    await property.save();
-    res.json({
-      success: true,
-      message: "Added new property successfully",
-    });
-  } catch (e) {
-    next(new Error("Error while adding new property"));
-  }
-};
-
 module.exports.uploadPropertyImages = async (req, res, next) => {
   try {
     const { _id } = req.body;
@@ -241,8 +228,6 @@ module.exports.uploadPropertyImages = async (req, res, next) => {
 module.exports.updateProperty = async (req, res, next) => {
   try {
     const id = req.params.property_id;
-
-    const updatedInfo = req.body;
 
     await Property.updateOne(
       {
