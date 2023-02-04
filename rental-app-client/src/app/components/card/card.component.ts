@@ -7,14 +7,6 @@ import { Property } from 'src/app/model/property';
     <div
       class="max-w-xs bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-      <!-- <div>
-        <img
-          class="w-full h-60 rounded-t-lg"
-          src="{{ cardData.image }}"
-          alt=""
-        />
-      </div> -->
-
       <app-carousel
         [images]="cardData.propertyImages"
         [styles]="carouselStyle"
@@ -57,11 +49,12 @@ import { Property } from 'src/app/model/property';
           <span class="text-3xl font-bold text-gray-900 dark:text-white">
             {{ '$' + cardData.price }}
           </span>
-          <a
-            href="#"
+          <button
+            (click)="callBackFn(cardData.name)"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >View</a
           >
+            View
+          </button>
         </div>
       </div>
     </div>
@@ -70,6 +63,7 @@ import { Property } from 'src/app/model/property';
 })
 export class CardComponent {
   @Input() cardData!: Property;
+  @Input() callBackFn!: Function;
   carouselStyle: {
     height: string;
   } = {
