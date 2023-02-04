@@ -15,26 +15,26 @@ const applyFilters = (req, res, show_all = req.query.show_all) => {
 
   if (req.query.view_count_lt) {
     query.view_count = {
-      $lt: req.query.view_count_lt,
+      $lte: req.query.view_count_lt,
     };
   }
 
   if (req.query.view_count_gt) {
     query.view_count = {
-      $gt: req.query.view_count_gt,
+      $gte: req.query.view_count_gt,
       ...query.view_count,
     };
   }
 
   if (req.query.rating_gt) {
     query.overall_rating = {
-      $gt: req.query.rating_gt,
+      $gte: req.query.rating_gt,
     };
   }
 
   if (req.query.rating_lt) {
     query.overall_rating = {
-      $lt: req.query.rating_lt,
+      $lte: req.query.rating_lt,
       ...query.rating,
     };
   }
