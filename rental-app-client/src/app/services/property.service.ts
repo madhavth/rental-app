@@ -40,7 +40,7 @@ export class PropertyService {
   }
 
   deletePropertyById(_id: string) {
-    return this.http.delete(`${environment.SERVER}/api/properties/${_id}`);
+    return this.http.delete(`${environment.SERVER}/properties/${_id}`);
   }
 
   updateProperty() {}
