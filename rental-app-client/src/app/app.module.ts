@@ -8,6 +8,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './services/user.service';
 import { UserAuthGuard } from './AuthGuard/user-auth.guard';
 import { HeaderInterceptor } from './interceptor/header.interceptor';
+import { HomeModule } from './modules/home/home.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { AdminComponent } from './pages/admin/admin.component';
 
 function initializeAppFactory(userService: UserService): () => void {
   return () => {
@@ -18,8 +21,9 @@ function initializeAppFactory(userService: UserService): () => void {
   };
 }
 
+
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent],
+  declarations: [AppComponent, HeaderComponent, FooterComponent, AdminComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
@@ -45,7 +49,15 @@ function initializeAppFactory(userService: UserService): () => void {
             (module) => module.PropertyModule
           ),
       },
+      {
+        path: 'admin',
+        loadChildren: () => import('./modules/admin/admin.module').then(
+          module => module.AdminModule
+        ),
+      }
     ]),
+    HomeModule,
+    AdminModule,
   ],
   providers: [
     {
@@ -62,4 +74,5 @@ function initializeAppFactory(userService: UserService): () => void {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

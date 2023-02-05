@@ -175,6 +175,7 @@ module.exports.addProperty = async (req, res, next) => {
     // don't allow to update these fields
     req.body.view_count = undefined;
     req.body.is_verified = undefined;
+    req.body.is_rejected = undefined;
 
     const property = new Property(req.body);
     await property.save();

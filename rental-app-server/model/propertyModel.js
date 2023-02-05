@@ -35,7 +35,11 @@ const propertySchema = new mongoose.Schema(
     },
     is_verified: {
       type: Boolean,
-      default: true,
+      default: false,
+    },
+    is_rejected: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

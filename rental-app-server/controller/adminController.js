@@ -2,11 +2,11 @@ const Property = require("../model/propertyModel");
 
 module.exports.changePropertyVerification = async (req, res, next) => {
   try {
-    const property = await Property.findByIdAndUpdate(
-      req.params.property_id,
-      { is_verified: true },
-      { new: true }
-    );
+    const set = {};
+
+    if (req.body.is_verified === false) {
+      set.is_rejected = true;
+    }
 
     const result = await Property.updateOne(
       {
@@ -15,6 +15,7 @@ module.exports.changePropertyVerification = async (req, res, next) => {
       {
         $set: {
           is_verified: req.body.is_verified,
+          ...set,
         },
       }
     );
@@ -34,10 +35,14 @@ module.exports.changePropertyVerification = async (req, res, next) => {
 
 module.exports.listAllProperties = async (req, res, next) => {
   try {
-    const query = {};
+    const query = { is_rejected: false };
 
     if (req.query.is_verified !== undefined) {
       query.is_verified = req.query.is_verified;
+    }
+
+    if (req.query.is_rejected !== undefined) {
+      query.is_rejected = req.query.is_rejected;
     }
 
     const properties = await Property.find(query);
