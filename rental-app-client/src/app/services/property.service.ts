@@ -26,19 +26,19 @@ export class PropertyService {
   }
 
   getNearByProperties() {
-    return this.http.get(`${environment.SERVER}/api/properties/nearby`);
+    return this.http.get(`${environment.SERVER}/properties/nearby`);
   }
 
   getTrendingProperties() {
-    return this.http.get(`${environment.SERVER}/api/properties/trending`);
+    return this.http.get(`${environment.SERVER}/properties/trending`);
   }
 
   getPropertyById(_id: string) {
-    return this.http.get(`${environment.SERVER}/api/properties${_id}`);
+    return this.http.get(`${environment.SERVER}/properties${_id}`);
   }
 
   deletePropertyById(_id: string) {
-    return this.http.delete(`${environment.SERVER}/api/properties${_id}`);
+    return this.http.delete(`${environment.SERVER}/properties${_id}`);
   }
 
   updateProperty() {}
