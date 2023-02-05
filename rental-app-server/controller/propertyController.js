@@ -74,6 +74,7 @@ const paginatedResult = async (Model, req, res, next, query, sort, showAll) => {
     { ...query, ...queries },
     {
       __v: 0,
+      schedules: 0,
     }
   )
     .limit(size)
