@@ -13,6 +13,13 @@ const applyFilters = (req, res, show_all = req.query.show_all) => {
     };
   }
 
+  if (req.query.name) {
+    query.name = {
+      $regex: req.query.name,
+      $options: "i",
+    };
+  }
+
   if (req.query.view_count_lt) {
     query.view_count = {
       $lte: req.query.view_count_lt,
@@ -145,12 +152,14 @@ module.exports.getTrendingProperties = async (req, res, next) => {
 module.exports.getPropertyById = async (req, res, next) => {
   try {
     const propertyId = req.params.property_id;
-    const property = await Property.findOne(
+    const property = await Property.findOneAndUpdate(
       {
         _id: propertyId,
       },
       {
-        __v: 0,
+        $inc: {
+          view_count: 1,
+        },
       }
     );
     res.json({ success: true, data: property });
@@ -229,6 +238,10 @@ module.exports.uploadPropertyImages = async (req, res, next) => {
 module.exports.updateProperty = async (req, res, next) => {
   try {
     const id = req.params.property_id;
+
+    // don't allow to change these fields from users side
+    req.body.is_verified = undefined;
+    req.body.is_rejected = undefined;
 
     await Property.updateOne(
       {
