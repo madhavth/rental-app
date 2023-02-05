@@ -4,9 +4,11 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './common/header/header.component';
 import { FooterComponent } from './common/footer/footer.component';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent],
   imports: [
+    HttpClientModule,
     BrowserModule,
     RouterModule.forRoot([
       {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { Property } from 'src/app/model/property';
 
 @Component({
@@ -14,16 +14,16 @@ import { Property } from 'src/app/model/property';
           (click)="goPrev()"
         >
           <svg
-            width="8"
-            height="14"
+            width="12"
+            height="18"
             viewBox="0 0 8 14"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M7 1L1 7L7 13"
-              stroke="white"
-              stroke-width="2"
+              stroke="black"
+              stroke-width="3"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
@@ -31,7 +31,7 @@ import { Property } from 'src/app/model/property';
         </button>
         <div class="w-full h-full mx-auto overflow-x-hidden overflow-y-hidden">
           <div
-            id="slider"
+            id="{{ sliderName }}"
             class="h-full flex lg:gap-8 md:gap-6 gap-14 items-center justify-start transition ease-out duration-700"
           >
             <div
@@ -48,16 +48,16 @@ import { Property } from 'src/app/model/property';
           (click)="goNext()"
         >
           <svg
-            width="8"
-            height="14"
+            width="12"
+            height="18"
             viewBox="0 0 8 14"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M1 1L7 7L1 13"
-              stroke="white"
-              stroke-width="2"
+              stroke="black"
+              stroke-width="3"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
@@ -68,8 +68,9 @@ import { Property } from 'src/app/model/property';
   `,
   styles: [],
 })
-export class SliderComponent implements OnInit {
-  @Input() items!: Array<Property>;
+export class SliderComponent implements AfterViewInit {
+  @Input() items!: Array<Property> | undefined;
+  @Input() sliderName!: string;
   @Input() callBackFn!: Function;
   slider!: any;
   defaultTransform!: number;
@@ -86,8 +87,9 @@ export class SliderComponent implements OnInit {
   }
   constructor() {}
 
-  ngOnInit(): void {
-    this.slider = document.getElementById('slider');
+  ngAfterViewInit(): void {
+    this.slider = document.getElementById(this.sliderName);
+    console.log(this.slider);
     this.defaultTransform = 0;
   }
 }

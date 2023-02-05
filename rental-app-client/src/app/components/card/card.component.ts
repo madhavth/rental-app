@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Property } from 'src/app/model/property';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card',
@@ -50,7 +51,7 @@ import { Property } from 'src/app/model/property';
             {{ '$' + cardData.price }}
           </span>
           <button
-            (click)="callBackFn(cardData.name)"
+            (click)="callBackFn(cardData._id)"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             View
@@ -64,6 +65,7 @@ import { Property } from 'src/app/model/property';
 export class CardComponent {
   @Input() cardData!: Property;
   @Input() callBackFn!: Function;
+  router = inject(Router);
   carouselStyle: {
     height: string;
   } = {

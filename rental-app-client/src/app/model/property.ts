@@ -1,4 +1,5 @@
 export interface Property {
+  _id?: string;
   name?: string;
   location?: {
     longitude: number;
