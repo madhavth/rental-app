@@ -23,7 +23,7 @@ function initializeAppFactory(userService: UserService): () => void {
 
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent, AdminComponent],
+  declarations: [AppComponent, HeaderComponent, FooterComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
@@ -56,8 +56,6 @@ function initializeAppFactory(userService: UserService): () => void {
         ),
       }
     ]),
-    HomeModule,
-    AdminModule,
   ],
   providers: [
     {

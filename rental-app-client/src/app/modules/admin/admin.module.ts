@@ -8,10 +8,8 @@ import {AdminCarouselComponent} from "../../components/carousel/admin_carousel.c
 
 
 @NgModule({
-  declarations: [AdminCardComponent, AdminCarouselComponent],
-  exports: [
-    AdminCardComponent
-  ],
+  declarations: [AdminCardComponent, AdminCarouselComponent, AdminComponent],
+  exports: [],
   imports: [
     CommonModule,
     RouterModule.forChild([

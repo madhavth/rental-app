@@ -18,7 +18,7 @@ import PropertyNoMetaDataResponse from "../../model/PropertyNoMetaDataResponse";
 
       <div *ngIf="(networkState$ | async) as state">
 
-        <div *ngIf="state.loading">
+        <div *ngIf="state.loading === true">
           Loading Data
         </div>
 
@@ -34,7 +34,7 @@ import PropertyNoMetaDataResponse from "../../model/PropertyNoMetaDataResponse";
           </div>
         </div>
 
-        <div *ngIf="(state.data?.data?.length || 0) === 0;">
+        <div *ngIf="(!state.data?.data?.length)">
           <h1>No properties left to review</h1>
         </div>
 
