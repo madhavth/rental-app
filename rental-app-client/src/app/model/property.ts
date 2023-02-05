@@ -14,6 +14,11 @@ export interface Property {
   ];
   description?: string;
   type?: string;
+  property_features: {
+    bedrooms: number;
+    bathrooms: number;
+    beds: number;
+  };
   propertyImages: Array<{ img: string }>;
   user_id?: string;
   price?: number;

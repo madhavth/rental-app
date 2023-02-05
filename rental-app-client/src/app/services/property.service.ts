@@ -21,7 +21,7 @@ export class PropertyService {
       .get<{
         success: boolean;
         data: { properties: Array<Property>; metadata: MetaData };
-      }>(`${environment.SERVER}/api/properties`)
+      }>(`${environment.SERVER}/properties`)
       .pipe(map((response) => response.data));
   }
 
@@ -35,7 +35,7 @@ export class PropertyService {
 
   getPropertyById(_id: string) {
     return this.http.get<{ success: boolean; data: Property }>(
-      `${environment.SERVER}/api/properties/${_id}`
+      `${environment.SERVER}/properties/${_id}`
     );
   }
 

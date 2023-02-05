@@ -8,12 +8,14 @@ import { MyPropertiesComponent } from 'src/app/pages/properties/my-properties/my
 import { PropertyComponent } from 'src/app/pages/properties/property/property.component';
 import { HomeModule } from '../home/home.module';
 import { SliderComponent } from 'src/app/components/slider/slider.component';
+import { ReviewComponent } from 'src/app/components/review/review.component';
 @NgModule({
   declarations: [
     AddPropertyComponent,
     FavoritePropertiesComponent,
     PropertyComponent,
     MyPropertiesComponent,
+    ReviewComponent,
   ],
   imports: [
     CommonModule,
