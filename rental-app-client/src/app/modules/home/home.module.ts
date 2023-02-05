@@ -13,11 +13,11 @@ import { SliderComponent } from 'src/app/components/slider/slider.component';
     CarouselComponent,
     SliderComponent,
   ],
-  exports: [CardComponent, CarouselComponent, SliderComponent, CommonModule],
 
   imports: [
     CommonModule,
     RouterModule.forChild([{ path: '', component: HomeComponent }]),
   ],
+  exports: [CardComponent, CarouselComponent, SliderComponent],
 })
 export class HomeModule {}

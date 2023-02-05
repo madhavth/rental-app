@@ -7,11 +7,16 @@ import { FavoritePropertiesComponent } from 'src/app/pages/properties/favorite-p
 import { MyPropertiesComponent } from 'src/app/pages/properties/my-properties/my-properties.component';
 import { PropertyComponent } from 'src/app/pages/properties/property/property.component';
 import { HomeModule } from '../home/home.module';
+import { SliderComponent } from 'src/app/components/slider/slider.component';
 @NgModule({
-  declarations: [AddPropertyComponent, FavoritePropertiesComponent],
+  declarations: [
+    AddPropertyComponent,
+    FavoritePropertiesComponent,
+    PropertyComponent,
+    MyPropertiesComponent,
+  ],
   imports: [
     CommonModule,
-    HomeModule,
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: 'add', component: AddPropertyComponent },
@@ -19,6 +24,7 @@ import { HomeModule } from '../home/home.module';
       { path: 'my', component: MyPropertiesComponent },
       { path: ':property_id', component: PropertyComponent },
     ]),
+    HomeModule,
   ],
 })
 export class PropertyModule {}

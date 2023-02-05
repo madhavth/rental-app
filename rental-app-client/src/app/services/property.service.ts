@@ -34,11 +34,13 @@ export class PropertyService {
   }
 
   getPropertyById(_id: string) {
-    return this.http.get(`${environment.SERVER}/properties${_id}`);
+    return this.http.get<{ success: boolean; data: Property }>(
+      `${environment.SERVER}/api/properties/${_id}`
+    );
   }
 
   deletePropertyById(_id: string) {
-    return this.http.delete(`${environment.SERVER}/properties${_id}`);
+    return this.http.delete(`${environment.SERVER}/api/properties/${_id}`);
   }
 
   updateProperty() {}

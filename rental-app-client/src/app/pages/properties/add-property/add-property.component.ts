@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-add-property',
-  template: ` <p>add works!</p> `,
+  template: `add proerty works`,
   styles: [],
 })
 export class AddPropertyComponent {}
