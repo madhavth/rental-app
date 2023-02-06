@@ -21,6 +21,8 @@ const login = async (req, res, next) => {
           userId: user._id,
           email: user.email,
           role: user.role,
+          firstName: user.firstname,
+          lastName: user.lastname,
         },
         process.env.SECRET
       );

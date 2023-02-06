@@ -1,8 +1,10 @@
 import { Component, inject, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, mergeMap } from 'rxjs';
 import { Property } from 'src/app/model/property';
+import { Review } from 'src/app/model/review';
+import { User } from 'src/app/model/user';
 import { PropertyService } from 'src/app/services/property.service';
 import { Utils } from 'src/app/utils/Utils';
 
@@ -130,7 +132,7 @@ import { Utils } from 'src/app/utils/Utils';
     <div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
     <div class="relative w-full h-full max-w-2xl md:h-auto">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div [formGroup]="reviewForm" class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -144,18 +146,18 @@ import { Utils } from 'src/app/utils/Utils';
             <!-- Modal body -->
             <div class="p-6 space-y-6">
               <div>
-                    <label for="comment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Comment</label>
-                    <input name="comment" id="comment" placeholder="Write your comment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                    <label for="comment"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Comment</label>
+                    <input name="comment" formControlName="comment" id="comment" placeholder="Write your comment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
               </div>
               <div>
                     <label for="rating" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rating</label>
-                    <input name="rating" id="rating" placeholder="Write your rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                    <input name="rating" id="rating" formControlName="rating" type="number" min="1" max="5" placeholder="Write your rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
               </div>
             </div>
             
             <!-- Modal footer -->
             <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button data-modal-hide="defaultModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
+                <button data-modal-hide="defaultModal" (click)="reviewProperty()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
                 <button data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button>
             </div>
         </div>
@@ -167,22 +169,31 @@ import { Utils } from 'src/app/utils/Utils';
 export class PropertyComponent {
   property!: Property;
   router = inject(Router);
-  reviewForm = new FormGroup({
-    rating: new FormControl(null, [
-      Validators.required,
-      Validators.min(1),
-      Validators.max(5),
-    ]),
-    comment: new FormControl(null, [Validators.required]),
+  propertyService = inject(PropertyService);
+  userData = localStorage.getItem('USER_STATE');
+  user = JSON.parse(this.userData!);
+  reviewForm = inject(FormBuilder).nonNullable.group({
+    rating: '',
+    comment: '',
+    user_id: `${this.user.firstName + ' ' + this.user.lastName}`,
   });
 
+  reviewProperty() {
+    this.propertyService
+      .reviewProperty(
+        this.property._id!,
+        this.reviewForm.value as unknown as Review
+      )
+      .subscribe((data) => {
+        if (data.success) this.router.navigate(['']);
+      });
+  }
   carouselStyle: {
     height: string;
   } = {
     height: ' md:h-96',
   };
   activatedRoute = inject(ActivatedRoute);
-  propertyService = inject(PropertyService);
 
   constructor() {
     this.activatedRoute.paramMap

@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment.development';
 import { Property } from '../model/property';
 import { MetaData } from '../model/metaData';
 import { map } from 'rxjs';
+import { Review } from '../model/review';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,13 @@ export class PropertyService {
 
   deletePropertyById(_id: string) {
     return this.http.delete(`${environment.SERVER}/properties/${_id}`);
+  }
+
+  reviewProperty(_id: string, payload: Review) {
+    return this.http.post<{ success: boolean; messsage: string }>(
+      `${environment.SERVER}/properties/${_id}/reviews`,
+      payload
+    );
   }
 
   updateProperty() {}
