@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
 
           <span
             class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3"
-            >{{ cardData.avgRating?.rating }}</span
+            >{{ cardData.avgRating?.rating | number : '0.1' }}</span
           >
         </div>
         <a href="#">
