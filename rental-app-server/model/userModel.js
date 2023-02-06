@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema(
     ],
     schedules: [
       {
-        property_id: ObjectId,
+        property_id: String, //ObjectId,
         title: String,
         description: String,
         time: Date,

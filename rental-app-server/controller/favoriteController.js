@@ -1,9 +1,15 @@
 const Property = require("../model/propertyModel");
 const User = require("../model/userModel");
+const mongoose = require("mongoose");
 
 module.exports.getAllFavorites = async (req, res, next) => {
   try {
     const result = await User.findOne({ _id: req.userData.userId });
+
+    if (result == null) {
+      return next(new Error("User not found"));
+    }
+
     const favorites = result.favorite_properties || [];
     const properties = await Property.find({
       _id: { $in: favorites },
@@ -23,8 +29,13 @@ module.exports.addToFavorites = async (req, res, next) => {
         $ne: req.userData.userId,
       },
     });
+
     if (!property) {
-      return next(new Error("Property not found"));
+      return next(
+        new Error(
+          "Property not found or user is not allowed to add to favorites"
+        )
+      );
     }
 
     const result = await User.updateOne(
