@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
-import { Property } from '../model/property';
-import { MetaData } from '../model/metaData';
-import { map } from 'rxjs';
-import { Review } from '../model/review';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment.development';
+import {Property} from '../model/property';
+import {MetaData} from '../model/metaData';
+import {map} from 'rxjs';
+import {Review} from '../model/review';
+import {ToastrService} from "ngx-toastr";
+import {FormGroup} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropertyService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastService: ToastrService) {
+  }
 
   propertyData: { properties?: Array<Property>; metaData?: MetaData } = {
     properties: [],
@@ -54,9 +57,10 @@ export class PropertyService {
   addToFavorites(property_id: string) {
     return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/users/favorites`,
-      { property_id }
+      {property_id}
     );
   }
+
   getAllFavorites() {
     return this.http.get<{ success: boolean; data: Property[] }>(
       `${environment.SERVER}/users/favorites`
@@ -70,7 +74,33 @@ export class PropertyService {
     );
   }
 
-  updateProperty() {}
+  updateProperty() {
 
-  addProperties() {}
+  }
+
+  addProperties(formData: FormGroup, latLng: { lat: number, lng: number }) {
+    const property: Property = {
+      type: formData.get('type')?.value,
+      name: formData.get('name')?.value,
+      description: formData.get('description')?.value,
+      price: formData.get('price')?.value,
+      location: [latLng.lat, latLng.lng],
+      propertyImages: [],
+      property_features: {
+        bedrooms: formData.get('no_of_bedrooms')?.value || 0,
+        bathrooms: formData.get('no_of_bathrooms')?.value || 0,
+        beds: formData.get('no_of_beds')?.value || 0,
+      }
+    };
+    return this.http.post<{ success: boolean; message: string }>(
+      `${environment.SERVER}/properties`,
+      property
+    );
+  }
+
+  uploadImages(images: string[]) {
+    // upload image using multi part form data
+    const formData = new FormData();
+
+  }
 }

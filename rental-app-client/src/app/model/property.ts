@@ -3,10 +3,7 @@ import { Review } from './review';
 export interface Property {
   _id?: string;
   name?: string;
-  location?: {
-    longitude: number;
-    latitude: number;
-  };
+  location?: number[];
   reviews?: Review[];
   description?: string;
   type?: string;

@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
+import {FormBuilder} from "@angular/forms";
+import { PropertyService } from 'src/app/services/property.service';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-add-property',
@@ -10,16 +13,16 @@ import { Component } from '@angular/core';
         Add New Property
       </h1>
       <div class="mt-5">
-        <form (ngSubmit)="submitForm()">
+        <form (ngSubmit)="submitForm()" [formGroup]="myFormData">
           <div class="grid md:grid-cols-2 md:gap-6">
             <div class=" z-0 w-full mb-6 group">
               <label
                 for="propertyName"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Property Name</label
+              >Property Name</label
               >
               <input
-                formControlName="propertyName"
+                formControlName="property_name"
                 type="text"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 name="propertyName"
@@ -33,9 +36,10 @@ import { Component } from '@angular/core';
               <label
                 for="price"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Price</label
+              >Price</label
               >
               <input
+                formControlName="price"
                 type="number"
                 name="price"
                 id="price"
@@ -51,9 +55,10 @@ import { Component } from '@angular/core';
               <label
                 for="address"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Address</label
+              >Address</label
               >
               <input
+                formControlName="address"
                 type="text"
                 name="address"
                 id="address"
@@ -66,9 +71,10 @@ import { Component } from '@angular/core';
               <label
                 for="type"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Type of Property</label
+              >Type of Property</label
               >
               <input
+                formControlName="type"
                 type="text"
                 name="type"
                 id="type"
@@ -82,9 +88,10 @@ import { Component } from '@angular/core';
             <label
               for="description"
               class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Description</label
+            >Description</label
             >
             <textarea
+              formControlName="description"
               id="description"
               name="description"
               rows="4"
@@ -97,9 +104,10 @@ import { Component } from '@angular/core';
               <label
                 for="bedroom"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >No. of Bedrooms</label
+              >No. of Bedrooms</label
               >
               <input
+                formControlName="no_of_bedrooms"
                 type="number"
                 name="bedroom"
                 id="bedroom"
@@ -112,9 +120,10 @@ import { Component } from '@angular/core';
               <label
                 for="bathroom"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >No. of Bathrooms</label
+              >No. of Bathrooms</label
               >
               <input
+                formControlName="no_of_bathrooms"
                 type="number"
                 name="bathroom"
                 id="bathroom"
@@ -127,9 +136,10 @@ import { Component } from '@angular/core';
               <label
                 for="type"
                 class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >No. of Beds</label
+              >No. of Beds</label
               >
               <input
+                formControlName="no_of_beds"
                 type="number"
                 name="bed"
                 id="bed"
@@ -144,11 +154,11 @@ import { Component } from '@angular/core';
             <label
               for="propertyImages"
               class="peer-focus:font-medium text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Property Images</label
+            >Property Images</label
             >
             <input
               type="file"
-              (change)="uploadFiles($event)"
+              (change)="updateSelectedFiles($event)"
               name="propertyImages"
               id="propertyImages"
               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -164,7 +174,8 @@ import { Component } from '@angular/core';
               class="peer-focus:font-medium text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Map</label
             >
-            <div name="map" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+            <div name="map"
+                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
               <app-map (markerChangeCallBack)="markerChanged"/>
             </div>
           </div>
@@ -184,29 +195,44 @@ import { Component } from '@angular/core';
 })
 export class AddPropertyComponent {
   markers: {lat: number; lng: number } = {lat: 0, lng: 0};
+  propertyService = inject(PropertyService);
 
-  formData = {
-    propertyName: '',
-    email: '',
-    // more form data goes here
-  };
-  selectedFiles: any;
-  uploadFiles(event: any) {
-    this.selectedFiles = event.target.files;
+  myFormData = inject(FormBuilder).group({
+    property_name: '',
+    price: 0,
+    address: '',
+    property_type: '',
+    description: '',
+    no_of_bedrooms: 0,
+    no_of_bathrooms: 0,
+    no_of_beds: 0,
+  });
+
+  selectedFiles: string[] = [];
+
+  constructor(private toastService: ToastrService) {
   }
+
+  updateSelectedFiles(event: any) {
+    this.selectedFiles = event.target.files;
+    console.log(this.selectedFiles);
+  }
+
   submitForm() {
-    const formData = new FormData();
-    formData.append('name', this.formData.propertyName);
-    formData.append('email', this.formData.email);
-    formData.append('lat', this.markers.lat.toString());
-    formData.append('lng', this.markers.lng.toString());
-    // append more form data here
-    for (const file of this.selectedFiles) {
-      formData.append('files', file);
-    }
+    console.log(this.myFormData.value);
+    this.propertyService.addProperties(this.myFormData, this.markers).subscribe((response) => {
+
+      if(response.success) {
+        this.toastService.success(response.message, 'Success');
+      }
+      else {
+        this.toastService.error(response.message, 'Error');
+      }
+
+    });
   }
 
   markerChanged(marker: {lat: number, lng: number}) {
-
+    this.markers = marker;
   }
 }
