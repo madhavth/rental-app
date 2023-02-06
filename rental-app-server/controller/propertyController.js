@@ -187,11 +187,18 @@ module.exports.addProperty = async (req, res, next) => {
     req.body.is_verified = undefined;
     req.body.is_rejected = undefined;
 
+    req.body.user_id = req.userData.userId;
+
     const property = new Property(req.body);
-    await property.save();
+    const result = await property.save();
+
+    const success = result !== undefined && result !== null;
+
     res.json({
-      success: true,
-      message: "Added new property successfully",
+      success: success,
+      message: success
+        ? "Added new property successfully"
+        : "Error while adding new property",
     });
   } catch (e) {
     next(new Error("Error while adding new property"));
