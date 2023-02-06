@@ -7,8 +7,22 @@ import { FavoritePropertiesComponent } from 'src/app/pages/properties/favorite-p
 import { MyPropertiesComponent } from 'src/app/pages/properties/my-properties/my-properties.component';
 import { PropertyComponent } from 'src/app/pages/properties/property/property.component';
 import { HomeModule } from '../home/home.module';
-import { SliderComponent } from 'src/app/components/slider/slider.component';
 import { ReviewComponent } from 'src/app/components/review/review.component';
+import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
+import {
+  DateTimePickerModule,
+  TimePickerAllModule,
+  DateTimePickerAllModule,
+} from '@syncfusion/ej2-angular-calendars';
+import {
+  DayService,
+  WeekService,
+  WorkWeekService,
+  MonthService,
+  AgendaService,
+  MonthAgendaService,
+} from '@syncfusion/ej2-angular-schedule';
+import { SchedularComponent } from 'src/app/common/schedular/schedular.component';
 @NgModule({
   declarations: [
     AddPropertyComponent,
@@ -16,10 +30,15 @@ import { ReviewComponent } from 'src/app/components/review/review.component';
     PropertyComponent,
     MyPropertiesComponent,
     ReviewComponent,
+    SchedularComponent,
   ],
   imports: [
+    ScheduleModule,
     CommonModule,
     ReactiveFormsModule,
+    DateTimePickerModule,
+    TimePickerAllModule,
+    DateTimePickerAllModule,
     RouterModule.forChild([
       { path: 'add', component: AddPropertyComponent },
       { path: 'favorites', component: FavoritePropertiesComponent },
@@ -27,6 +46,14 @@ import { ReviewComponent } from 'src/app/components/review/review.component';
       { path: ':property_id', component: PropertyComponent },
     ]),
     HomeModule,
+  ],
+  providers: [
+    DayService,
+    WeekService,
+    WorkWeekService,
+    MonthService,
+    AgendaService,
+    MonthAgendaService,
   ],
 })
 export class PropertyModule {}
