@@ -1,8 +1,10 @@
 import { Component, inject, Input } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, mergeMap } from 'rxjs';
 import { Property } from 'src/app/model/property';
 import { PropertyService } from 'src/app/services/property.service';
+import { Utils } from 'src/app/utils/Utils';
 
 @Component({
   selector: 'app-property',
@@ -119,21 +121,61 @@ import { PropertyService } from 'src/app/services/property.service';
         </h5>
       </div>
       <div class="w-3/5 flex justify-end">
-      <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add Review</button>
-
+      <button type="submit" data-modal-target="defaultModal" data-modal-toggle="defaultModal"  class="focus:outline-none text-white bg-green-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add Review</button>
       </div>    
     </div>  
-    <div class="w-4/5 mx-auto">
-      <app-review/>
-      <app-review/>
+    <div *ngFor="let item of property.reviews" class="w-4/5 mx-auto">
+      <app-review [reviewData]="item"/>
     </div>
-   
+    <div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+    <div class="relative w-full h-full max-w-2xl md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Add Review
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+              <div>
+                    <label for="comment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Comment</label>
+                    <input name="comment" id="comment" placeholder="Write your comment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+              </div>
+              <div>
+                    <label for="rating" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rating</label>
+                    <input name="rating" id="rating" placeholder="Write your rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+              </div>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="defaultModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
+                <button data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
   `,
   styles: [],
 })
 export class PropertyComponent {
   property!: Property;
   router = inject(Router);
+  reviewForm = new FormGroup({
+    rating: new FormControl(null, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(5),
+    ]),
+    comment: new FormControl(null, [Validators.required]),
+  });
+
   carouselStyle: {
     height: string;
   } = {
@@ -152,7 +194,9 @@ export class PropertyComponent {
       )
       .subscribe((response) => {
         this.property = response.data as Property;
-        console.log(this.property);
+        this.property.reviews?.forEach((data) => {
+          data.ratingArray = Utils.convertNumToArray(data.rating).arr;
+        });
       });
   }
 }

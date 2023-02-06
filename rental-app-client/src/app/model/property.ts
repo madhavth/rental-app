@@ -1,3 +1,5 @@
+import { Review } from './review';
+
 export interface Property {
   _id?: string;
   name?: string;
@@ -5,13 +7,7 @@ export interface Property {
     longitude: number;
     latitude: number;
   };
-  reviews?: [
-    {
-      comment: string;
-      rating: number;
-      user_id: string;
-    }
-  ];
+  reviews?: Review[];
   description?: string;
   type?: string;
   property_features: {
