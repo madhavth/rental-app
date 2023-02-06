@@ -8,12 +8,6 @@ import { MyPropertiesComponent } from 'src/app/pages/properties/my-properties/my
 import { PropertyComponent } from 'src/app/pages/properties/property/property.component';
 import { HomeModule } from '../home/home.module';
 import { ReviewComponent } from 'src/app/components/review/review.component';
-import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
-import {
-  DateTimePickerModule,
-  TimePickerAllModule,
-  DateTimePickerAllModule,
-} from '@syncfusion/ej2-angular-calendars';
 import {
   DayService,
   WeekService,
@@ -25,6 +19,7 @@ import {
 import { SchedularComponent } from 'src/app/common/schedular/schedular.component';
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {MapComponent} from "../../pages/properties/add-property/map.component";
+import { SchedulesModule } from '../schedules/schedules.module';
 @NgModule({
   declarations: [
     MapComponent,
@@ -33,15 +28,11 @@ import {MapComponent} from "../../pages/properties/add-property/map.component";
     PropertyComponent,
     MyPropertiesComponent,
     ReviewComponent,
-    SchedularComponent,
   ],
   imports: [
-    ScheduleModule,
     CommonModule,
     ReactiveFormsModule,
-    DateTimePickerModule,
-    TimePickerAllModule,
-    DateTimePickerAllModule,
+
     RouterModule.forChild([
       { path: 'add', component: AddPropertyComponent },
       { path: 'favorites', component: FavoritePropertiesComponent },
@@ -50,6 +41,7 @@ import {MapComponent} from "../../pages/properties/add-property/map.component";
     ]),
     HomeModule,
     LeafletModule
+    SchedulesModule,
   ],
   providers: [
     DayService,

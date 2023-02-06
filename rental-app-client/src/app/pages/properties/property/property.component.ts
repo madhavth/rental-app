@@ -5,8 +5,8 @@ import { map, mergeMap } from 'rxjs';
 import { Property } from 'src/app/model/property';
 import { Review } from 'src/app/model/review';
 import { Schedule } from 'src/app/model/schedule';
-import { User } from 'src/app/model/user';
 import { PropertyService } from 'src/app/services/property.service';
+import { ScheduleService } from 'src/app/services/schedule.service';
 import { Utils } from 'src/app/utils/Utils';
 
 @Component({
@@ -181,7 +181,7 @@ import { Utils } from 'src/app/utils/Utils';
                 </button>
             </div>
 
-     <app-schedular></app-schedular>
+     <app-schedular [callBackFn]="addSchedule.bind(this)"></app-schedular>
    </div>
    </div>
     </div>
@@ -192,6 +192,8 @@ export class PropertyComponent {
   property!: Property;
   router = inject(Router);
   propertyService = inject(PropertyService);
+  scheduleService = inject(ScheduleService);
+
   userData = localStorage.getItem('USER_STATE');
   user = JSON.parse(this.userData!);
   reviewForm = inject(FormBuilder).nonNullable.group({
@@ -199,6 +201,21 @@ export class PropertyComponent {
     comment: '',
     user_id: `${this.user.firstName + ' ' + this.user.lastName}`,
   });
+  constructor() {
+    this.activatedRoute.paramMap
+      .pipe(
+        map((params) => params.get('property_id') as string),
+        mergeMap((property_id) =>
+          this.propertyService.getPropertyById(property_id)
+        )
+      )
+      .subscribe((response) => {
+        this.property = response.data as Property;
+        this.property.reviews?.forEach((data) => {
+          data.ratingArray = Utils.convertNumToArray(data.rating).arr;
+        });
+      });
+  }
 
   reviewProperty() {
     this.propertyService
@@ -225,19 +242,11 @@ export class PropertyComponent {
   };
   activatedRoute = inject(ActivatedRoute);
 
-  constructor() {
-    this.activatedRoute.paramMap
-      .pipe(
-        map((params) => params.get('property_id') as string),
-        mergeMap((property_id) =>
-          this.propertyService.getPropertyById(property_id)
-        )
-      )
-      .subscribe((response) => {
-        this.property = response.data as Property;
-        this.property.reviews?.forEach((data) => {
-          data.ratingArray = Utils.convertNumToArray(data.rating).arr;
-        });
+  addSchedule(payload: Schedule) {
+    this.scheduleService
+      .makeAnAppointment({ ...payload, property_id: this.property._id })
+      .subscribe((data) => {
+        console.log(data); //Toast
       });
   }
 }

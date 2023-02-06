@@ -55,10 +55,18 @@ function initializeAppFactory(userService: UserService): () => void {
       },
       {
         path: 'admin',
-        loadChildren: () => import('./modules/admin/admin.module').then(
-          module => module.AdminModule
-        ),
-      }
+        loadChildren: () =>
+          import('./modules/admin/admin.module').then(
+            (module) => module.AdminModule
+          ),
+      },
+      {
+        path: 'schedules',
+        loadChildren: () =>
+          import('./modules/schedules/schedules.module').then(
+            (module) => module.SchedulesModule
+          ),
+      },
     ]),
   ],
   providers: [
@@ -77,5 +85,4 @@ function initializeAppFactory(userService: UserService): () => void {
   bootstrap: [AppComponent],
   exports: []
 })
-export class AppModule {
-}
+export class AppModule {}
