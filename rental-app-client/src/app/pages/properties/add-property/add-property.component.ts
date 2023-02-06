@@ -1,7 +1,8 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
-import { PropertyService } from 'src/app/services/property.service';
+import {PropertyService} from 'src/app/services/property.service';
 import {ToastrService} from "ngx-toastr";
+import {mergeMap, pipe, tap} from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -195,7 +196,7 @@ import { Router } from '@angular/router';
   styles: [],
 })
 export class AddPropertyComponent {
-  markers: {lat: number; lng: number } = {lat: 0, lng: 0};
+  markers: { lat: number; lng: number } = {lat: 0, lng: 0};
   propertyService = inject(PropertyService);
 
   myFormData = inject(FormBuilder).group({
@@ -209,7 +210,7 @@ export class AddPropertyComponent {
     no_of_beds: 0,
   });
 
-  selectedFiles: string[] = [];
+  selectedFiles!: FileList;
 
   constructor(private toastService: ToastrService, private router: Router) {
   }
@@ -221,9 +222,15 @@ export class AddPropertyComponent {
 
   submitForm() {
     console.log(this.myFormData.value);
-    this.propertyService.addProperties(this.myFormData, this.markers).subscribe((response) => {
 
-      if(response.success) {
+    const combined = this.propertyService.uploadImages(this.selectedFiles).pipe(
+      mergeMap((response) => {
+        return this.propertyService.addProperties(this.myFormData, this.markers, response.data);
+      })
+    )
+
+    combined.subscribe((response) => {
+      if (response.success) {
         this.toastService.success(response.message, 'Success');
         this.router.navigate(['', 'properties', 'my']);
       }
@@ -234,7 +241,7 @@ export class AddPropertyComponent {
     });
   }
 
-  markerChanged(marker: {lat: number, lng: number}) {
+  markerChanged(marker: { lat: number, lng: number }) {
     this.markers = marker;
   }
 }

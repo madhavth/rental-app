@@ -236,7 +236,7 @@ module.exports.uploadPropertyImages = async (req, res, next) => {
             $set: { propertyImages },
           }
         );
-        res.json({ success: true, message: propertyImages });
+        res.json({ success: true, data: propertyImages });
       }
     }
   } catch (error) {

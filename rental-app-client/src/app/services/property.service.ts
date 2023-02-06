@@ -7,6 +7,7 @@ import { map } from 'rxjs';
 import { Review } from '../model/review';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup } from '@angular/forms';
+import IImage from "../model/image";
 
 @Injectable({
   providedIn: 'root',
@@ -74,28 +75,34 @@ export class PropertyService {
 
   updateProperty() {}
 
-  addProperties(formData: FormGroup, latLng: { lat: number; lng: number }) {
+  addProperties(formData: FormGroup, latLng: { lat: number; lng: number }, images: {img: string}[]) {
     const property: Property = {
       type: formData.get('type')?.value,
       name: formData.get('name')?.value,
       description: formData.get('description')?.value,
       price: formData.get('price')?.value,
       location: [latLng.lat, latLng.lng],
-      propertyImages: [],
+      propertyImages: images,
       property_features: {
         bedrooms: formData.get('no_of_bedrooms')?.value || 0,
         bathrooms: formData.get('no_of_bathrooms')?.value || 0,
         beds: formData.get('no_of_beds')?.value || 0,
       },
     };
+    debugger;
     return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/properties`,
       property
     );
   }
 
-  uploadImages(images: string[]) {
+  uploadImages(filesList: FileList) {
     // upload image using multi part form data
     const formData = new FormData();
+    formData.append('image', filesList[0]);
+    return this.http.patch<{ success: boolean; message: string, data: IImage[] }>(
+      `${environment.SERVER}/properties/upload-property-images`,
+      formData
+    );
   }
 }
