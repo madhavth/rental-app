@@ -71,6 +71,8 @@ function initializeAppFactory(userService: UserService): () => void {
     },
   ],
   bootstrap: [AppComponent],
+  exports: [
+  ]
 })
 export class AppModule {
 }
