@@ -38,7 +38,11 @@ import { Property } from 'src/app/model/property';
               *ngFor="let item of items"
               class="flex flex-shrink-0 relative w-full sm:w-auto"
             >
-              <app-card [cardData]="item" [callBackFn]="callBackFn"></app-card>
+              <app-card
+                [cardData]="item"
+                [callBackFn]="callBackFn"
+                textData="View"
+              ></app-card>
             </div>
           </div>
         </div>

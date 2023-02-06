@@ -45,9 +45,28 @@ export class PropertyService {
   }
 
   reviewProperty(_id: string, payload: Review) {
-    return this.http.post<{ success: boolean; messsage: string }>(
+    return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/properties/${_id}/reviews`,
       payload
+    );
+  }
+
+  addToFavorites(property_id: string) {
+    return this.http.post<{ success: boolean; message: string }>(
+      `${environment.SERVER}/users/favorites`,
+      { property_id }
+    );
+  }
+  getAllFavorites() {
+    return this.http.get<{ success: boolean; data: Property[] }>(
+      `${environment.SERVER}/users/favorites`
+    );
+  }
+
+  removeFromFavorites(property_id: string) {
+    console.log(property_id);
+    return this.http.delete<{ success: boolean; message: string }>(
+      `${environment.SERVER}/users/favorites/${property_id}`
     );
   }
 

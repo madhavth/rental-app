@@ -20,9 +20,17 @@ import { Utils } from 'src/app/utils/Utils';
         ></app-carousel>
       </div>
       <div class="w-3/5 ml-3.5">
+       
+      <div class="flex w-4/5">
+      <div class="w-2/5 flex justify-start">
         <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
-          {{ property.name }} Ram ko ghar
+        {{ property.name }} Ram ko ghar
         </h5>
+      </div>
+      <div class="w-3/5 flex justify-end">
+      <button type="submit" (click)="addToFavorites()"  class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add to Favorites</button>
+      </div>    
+    </div>  
         <div class="flex items-baseline text-gray-900 dark:text-white">
           <span class="text-3xl font-semibold">$</span>
           <span class="text-5xl font-extrabold tracking-tight"
@@ -204,6 +212,14 @@ export class PropertyComponent {
       )
       .subscribe((data) => {
         if (data.success) this.router.navigate(['']);
+      });
+  }
+  addToFavorites() {
+    this.propertyService
+      .addToFavorites(this.property._id!)
+      .subscribe((data) => {
+        if (data.success)
+          this.router.navigate(['', 'properties', this.property._id]);
       });
   }
   carouselStyle: {

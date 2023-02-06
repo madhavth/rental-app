@@ -1,3 +1,5 @@
+import { Property } from './property';
+
 export interface User {
   token?: string;
   userId?: string;
@@ -7,4 +9,5 @@ export interface User {
   password?: string;
   role?: string;
   confirmpassword?: string;
+  favorite_properties?: Property[];
 }
