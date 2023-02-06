@@ -46,7 +46,7 @@ module.exports.addToFavorites = async (req, res, next) => {
 
 module.exports.removeFromFavorites = async (req, res, next) => {
   try {
-    const property = await Property.findOne({ _id: req.body.property_id });
+    const property = await Property.findOne({ _id: req.params.property_id });
 
     if (!property) {
       return next(new Error("Property not found"));
