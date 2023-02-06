@@ -40,7 +40,7 @@ const propertySchema = new mongoose.Schema(
     is_rejected: {
       type: Boolean,
       default: false,
-    },
+    }
   },
   { timestamps: true }
 );

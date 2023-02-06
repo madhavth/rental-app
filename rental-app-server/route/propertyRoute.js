@@ -1,6 +1,6 @@
 const express = require("express");
 const { upload } = require("../config/multer");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const {
   getAllProperties,
   getPropertyById,
