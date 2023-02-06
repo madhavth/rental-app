@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import { PropertyService } from 'src/app/services/property.service';
 import {ToastrService} from "ngx-toastr";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-property',
@@ -210,7 +211,7 @@ export class AddPropertyComponent {
 
   selectedFiles: string[] = [];
 
-  constructor(private toastService: ToastrService) {
+  constructor(private toastService: ToastrService, private router: Router) {
   }
 
   updateSelectedFiles(event: any) {
@@ -224,6 +225,7 @@ export class AddPropertyComponent {
 
       if(response.success) {
         this.toastService.success(response.message, 'Success');
+        this.router.navigate(['', 'properties', 'my']);
       }
       else {
         this.toastService.error(response.message, 'Error');
