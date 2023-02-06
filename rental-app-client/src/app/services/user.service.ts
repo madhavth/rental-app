@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+import { MetaData } from '../model/metaData';
+import { Property } from '../model/property';
 import { User } from '../model/user';
 
 @Injectable({
@@ -33,5 +35,12 @@ export class UserService {
       `${environment.SERVER}/users/signup`,
       payload
     );
+  }
+
+  myProperties() {
+    return this.http.get<{
+      success: boolean;
+      data: { properties: Property[]; metadata: MetaData };
+    }>(`${environment.SERVER}/users/properties`);
   }
 }
