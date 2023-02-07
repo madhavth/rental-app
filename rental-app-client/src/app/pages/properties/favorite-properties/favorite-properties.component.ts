@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Property } from 'src/app/model/property';
 import { PropertyService } from 'src/app/services/property.service';
+import {catchError, mergeMap, of} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-favorite-properties',
@@ -13,10 +15,10 @@ import { PropertyService } from 'src/app/services/property.service';
         My Favorites
       </h1>
   <div class="flex mt-5">
-    <div class="flex items-center mr-4" *ngFor="let item of favorites">    
-  <app-card       
+    <div class="flex items-center mr-4" *ngFor="let item of favorites">
+  <app-card
       [cardData]="item"
-      [callBackFn]="removeFavorites.bind(this)" 
+      [callBackFn]="removeFavorites.bind(this)"
       textData="Remove"
       />
     </div>
@@ -34,10 +36,21 @@ export class FavoritePropertiesComponent {
       this.favorites = response.data;
     });
   }
+
+  isRemoving = false;
+  toastService = inject(ToastrService);
+
   removeFavorites(property_id: string) {
     this.propertyService
       .removeFromFavorites(property_id)
+      .pipe(
+    catchError((err)=> {
+          this.toastService.error('Something went wrong while removing from favorites', 'Error');
+          return of({success: false, data: null});
+        }),
+      )
       .subscribe((response) => {
+        this.toastService.success('Removed from favorites', 'Success');
         this.propertyService.getAllFavorites().subscribe((response) => {
           this.favorites = response.data;
         });
