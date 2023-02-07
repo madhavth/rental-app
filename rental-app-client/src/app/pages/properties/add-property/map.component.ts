@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import * as Leaflet from 'leaflet';
 
 Leaflet.Icon.Default.imagePath = 'assets/';
@@ -31,14 +31,15 @@ export class MapComponent {
       }),
     ],
     zoom: 16,
-    center: { lat: 41.025248138565395, lng: -91.96746201243195 },
+    center: {lat: 41.025248138565395, lng: -91.96746201243195},
   };
 
   //41.025248138565395, -91.96746201243195
   myMarker = Leaflet.marker(
-    { lat: 41.025248138565395, lng: -91.96746201243195 },
-    { draggable: true }
-  );
+    {lat: 41.025248138565395, lng: -91.96746201243195},
+    {draggable: true}
+  ).on('click', (event) => this.markerChanged(event))
+    .on('dragend', (event) => this.markerChanged(event));
 
   initMarkers() {
     const initialMarkers = [
@@ -80,7 +81,7 @@ export class MapComponent {
   }
 
   generateMarker(data: any, index: number) {
-    return Leaflet.marker(data.position, { draggable: data.draggable })
+    return Leaflet.marker(data.position, {draggable: data.draggable})
       .on('click', (event) => this.markerClicked(event, index))
       .on('dragend', (event) => this.markerDragEnd(event, index));
   }
@@ -94,7 +95,11 @@ export class MapComponent {
     this.markerChanged($event);
   }
 
-  markerClicked($event: any, index: number) {}
+  markerClicked($event: any, index: number) {
+    this.markerChanged($event);
+  }
 
-  markerDragEnd($event: any, index: number) {}
+  markerDragEnd($event: any, index: number) {
+    this.markerChanged($event);
+  }
 }

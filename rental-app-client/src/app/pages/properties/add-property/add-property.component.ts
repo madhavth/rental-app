@@ -196,7 +196,7 @@ import { Router } from '@angular/router';
   styles: [],
 })
 export class AddPropertyComponent {
-  markers: { lat: number; lng: number } = { lat: 0, lng: 0 };
+  markers: { lat: number; lng: number } = { lat: 41.025248138565395, lng: -91.96746201243195 };
   propertyService = inject(PropertyService);
 
   myFormData = inject(FormBuilder).group({
