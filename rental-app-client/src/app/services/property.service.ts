@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
-import { Property } from '../model/property';
-import { MetaData } from '../model/metaData';
-import { map } from 'rxjs';
-import { Review } from '../model/review';
-import { ToastrService } from 'ngx-toastr';
-import { FormGroup } from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment.development';
+import {Property} from '../model/property';
+import {MetaData} from '../model/metaData';
+import {map} from 'rxjs';
+import {Review} from '../model/review';
+import {ToastrService} from 'ngx-toastr';
+import {FormGroup} from '@angular/forms';
 import IImage from '../model/image';
 import PropertyResponse from '../model/propertyResponse';
 
@@ -14,7 +14,8 @@ import PropertyResponse from '../model/propertyResponse';
   providedIn: 'root',
 })
 export class PropertyService {
-  constructor(private http: HttpClient, private toastService: ToastrService) {}
+  constructor(private http: HttpClient, private toastService: ToastrService) {
+  }
 
   propertyData: { properties?: Array<Property>; metaData?: MetaData } = {
     properties: [],
@@ -62,7 +63,7 @@ export class PropertyService {
   addToFavorites(property_id: string) {
     return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/users/favorites`,
-      { property_id }
+      {property_id}
     );
   }
 
@@ -78,7 +79,8 @@ export class PropertyService {
     );
   }
 
-  updateProperty() {}
+  updateProperty() {
+  }
 
   addProperties(
     formData: FormGroup,
@@ -98,19 +100,19 @@ export class PropertyService {
         beds: formData.get('no_of_beds')?.value || 0,
       },
     };
-    debugger;
+
     return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/properties`,
       property
     );
   }
 
-  uploadImages(filesList: FileList[]) {
+  uploadImages(filesList: FileList) {
     // upload image using multi part form data
     const formData = new FormData();
 
-    for (let file in filesList) {
-      formData.append('image', file);
+    for(let i=0; i< filesList.length; i++) {
+      formData.append('image', filesList[i]);
     }
 
     return this.http.patch<{

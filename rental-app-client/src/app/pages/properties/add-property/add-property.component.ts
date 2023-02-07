@@ -210,13 +210,12 @@ export class AddPropertyComponent {
     no_of_beds: 0,
   });
 
-  selectedFiles!: FileList[];
+  selectedFiles!: FileList;
 
   constructor(private toastService: ToastrService, private router: Router) {}
 
   updateSelectedFiles(event: any) {
     this.selectedFiles = event.target.files;
-    console.log('THIS IS IT' + this.selectedFiles.length);
   }
 
   submitForm() {

@@ -220,9 +220,9 @@ module.exports.uploadPropertyImages = async (req, res, next) => {
   try {
     const { _id } = req.body;
 
-    // if (!fs.existsSync("assets/pics")) {
-    //   fs.mkdir("assets/pics");
-    // }
+    if (!fs.existsSync("assets/pics")) {
+      fs.mkdir("assets/pics");
+    }
 
     let propertyImages = [];
     if (req.files !== undefined) {
