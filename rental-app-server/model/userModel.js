@@ -24,6 +24,7 @@ const UserSchema = mongoose.Schema(
         title: String,
         description: String,
         time: Date,
+        time_end: Date,
         owner_id: ObjectId,
         state: {
           type: String,

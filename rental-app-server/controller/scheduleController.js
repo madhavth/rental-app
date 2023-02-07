@@ -72,6 +72,7 @@ module.exports.getSchedulesForUser = async (req, res, next) => {
           title: "$schedules.title",
           description: "$schedules.description",
           time: "$schedules.time",
+          time_end: "$schedules.time_end",
           state: "$schedules.state",
           owner: {
             $arrayElemAt: ["$owner", 0],
@@ -91,6 +92,7 @@ module.exports.getSchedulesForUser = async (req, res, next) => {
           title: 1,
           description: 1,
           time: 1,
+          time_end: 1,
           owner: {
             _id: 1,
             firstname: 1,
@@ -142,6 +144,7 @@ module.exports.getSchedulesForUser = async (req, res, next) => {
           title: "$schedules.title",
           description: "$schedules.description",
           time: "$schedules.time",
+          time_end: "$schedules.time_end",
           state: "$schedules.state",
           buyer: {
             _id: "$_id",
@@ -163,6 +166,7 @@ module.exports.getSchedulesForUser = async (req, res, next) => {
               description: "$description",
               state: "$state",
               time: "$time",
+              time_end: "$time_end",
               buyer: "$buyer",
             },
           },
@@ -174,6 +178,7 @@ module.exports.getSchedulesForUser = async (req, res, next) => {
           schedule_id: "$_id.schedule_id",
           schedules: {
             time: 1,
+            time_end: 1,
             property: {
               name: 1,
               location: 1,
@@ -211,6 +216,16 @@ module.exports.addScheduleForUser = async (req, res, next) => {
   // check if time is valid
   if (time.toString() === "Invalid Date") {
     return next(new Error("Invalid time"));
+  }
+
+  const timeEnd = new Date(req.body.time_end);
+
+  if (timeEnd.toString() === "Invalid Date") {
+    return next(new Error("Invalid time end"));
+  }
+
+  if (timeEnd < time) {
+    return next(new Error("Time end cannot be before time start"));
   }
 
   // if time is before today
