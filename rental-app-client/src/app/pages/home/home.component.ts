@@ -78,10 +78,20 @@ import { Router } from '@angular/router';
         Properties Nearby
       </h1>
       <app-slider
+        *ngIf="location !== undefined; else noLocation"
         sliderName="nearBySlider"
         [items]="properties2"
         [callBackFn]="navigateTo"
       ></app-slider>
+      <ng-template #noLocation>
+        <button
+          (click)="getLocation()"
+          class="center w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          type="button"
+        >
+          Allow Location access
+        </button>
+      </ng-template>
     </section>
   `,
   styles: [
@@ -100,7 +110,29 @@ export class HomeComponent {
   router = inject(Router);
   properties: Property[] | undefined = [];
   properties2: Property[] | undefined = [];
+  public lat: any;
+  public lng: any;
+  location!: Geolocation;
+
+  getNearByProperties() {
+    this.propertyService
+      .getNearByProperties(this.lat, this.lng)
+      .subscribe((response) => {
+        this.properties2 = response.data.properties;
+        this.properties2.forEach((property) => {
+          property.avgRating = {
+            ...property.avgRating,
+            ...Utils.convertNumToArray(
+              Utils.calculatePropertyAverage(property.reviews)
+            ),
+          };
+        });
+      });
+  }
+
   constructor() {
+    console.log(this.location);
+    this.getLocation();
     if (this.properties?.length === 0) {
       this.propertyService.getTrendingProperties().subscribe((response) => {
         this.properties = response.data.properties;
@@ -114,22 +146,30 @@ export class HomeComponent {
         });
       });
     }
-    if (this.properties2?.length === 0) {
-      this.propertyService.getNearByProperties().subscribe((response) => {
-        this.properties2 = response.data.properties;
-        this.properties2.forEach((property) => {
-          property.avgRating = {
-            ...property.avgRating,
-            ...Utils.convertNumToArray(
-              Utils.calculatePropertyAverage(property.reviews)
-            ),
-          };
-        });
-      });
-    }
+
+    this.getNearByProperties();
   }
 
   navigateTo(_id: string) {
     this.router.navigate(['', 'properties', `${_id}`]);
+  }
+
+  getLocation() {
+    console.log(location);
+    if (navigator.geolocation) {
+      this.location = navigator.geolocation;
+      navigator.geolocation.getCurrentPosition(
+        (position: any) => {
+          if (position) {
+            this.lat = position.coords.latitude;
+            this.lng = position.coords.longitude;
+            this.getNearByProperties();
+          }
+        },
+        (error: any) => console.log(error)
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
   }
 }

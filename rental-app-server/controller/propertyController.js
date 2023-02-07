@@ -107,8 +107,8 @@ module.exports.getAllProperties = async (req, res, next) => {
 
 module.exports.getNearByProperties = async (req, res, next) => {
   try {
-    const longitude = req.query.longitude;
-    const latitude = req.query.latitude;
+    const longitude = +req.query.longitude;
+    const latitude = +req.query.latitude;
 
     const query = {
       is_verified: true,
@@ -127,6 +127,8 @@ module.exports.getNearByProperties = async (req, res, next) => {
     const results = await paginatedResult(Property, req, res, next, query);
     res.json(results);
   } catch (e) {
+    console.log(e);
+
     next(new Error("Error while fetching nearby properties"));
   }
 };
