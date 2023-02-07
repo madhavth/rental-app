@@ -37,7 +37,7 @@ import { ScheduleService } from 'src/app/services/schedule.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class SchedularComponent {
-  data!: CalendarModel;
+  data!: CalendarModel[];
   @Input() callBackFn!: Function;
   scheduleService = inject(ScheduleService);
   public selectedDate: Date = new Date(2023, 1, 15);
@@ -46,19 +46,30 @@ export class SchedularComponent {
 
   constructor() {
     this.scheduleService.getAppointment('2023-2-10').subscribe((res) => {
-      this.data = res.data.buyer.map((prop: any) => {
+      const buyer: CalendarModel[] = res.data.buyer.map((prop: Schedule) => {
         return {
           ...this.scheduleService.scheduleData,
-          Subject: prop.title,
+          Subject: '(Buyer) ' + prop.title,
           Id: prop.schedule_id,
           StartTime: prop.time,
           EndTime: prop.time_end,
           Description: prop.description,
-          Color: '#000000',
         };
       });
+
+      const seller: CalendarModel[] = res.data.owner.map((prop: Schedule) => {
+        return {
+          ...this.scheduleService.scheduleData,
+          Subject: '(Seller) ' + prop.title,
+          Id: prop.schedule_id,
+          StartTime: prop.time,
+          EndTime: prop.time_end,
+          Description: prop.description,
+        };
+      });
+      this.data = [...buyer, ...seller];
       this.eventSettings = {
-        dataSource: this.data as any,
+        dataSource: this.data,
       };
     });
   }
