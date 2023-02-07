@@ -1,18 +1,17 @@
-import { Component, ViewEncapsulation, ViewChild, Input } from '@angular/core';
+import { Component, ViewEncapsulation, Input, inject } from '@angular/core';
 
 import {
   ScheduleComponent,
   MonthService,
   DayService,
   WeekService,
-  WorkWeekService,
   EventSettingsModel,
-  ResizeService,
-  DragAndDropService,
   AgendaService,
   TimelineMonthService,
 } from '@syncfusion/ej2-angular-schedule';
+import { CalendarModel } from 'src/app/model/calendarDataModel';
 import { Schedule } from 'src/app/model/schedule';
+import { ScheduleService } from 'src/app/services/schedule.service';
 
 @Component({
   selector: 'app-schedular',
@@ -38,13 +37,32 @@ import { Schedule } from 'src/app/model/schedule';
   encapsulation: ViewEncapsulation.None,
 })
 export class SchedularComponent {
-  @Input() data!: Schedule;
+  data!: CalendarModel;
   @Input() callBackFn!: Function;
+  scheduleService = inject(ScheduleService);
   public selectedDate: Date = new Date(2023, 1, 15);
   public scheduleObj!: ScheduleComponent;
-  public eventSettings: EventSettingsModel = {
-    dataSource: [{ ...this.data }],
-  };
+  public eventSettings!: EventSettingsModel;
+
+  constructor() {
+    this.scheduleService.getAppointment('2023-2-10').subscribe((res) => {
+      this.data = res.data.buyer.map((prop: any) => {
+        return {
+          ...this.scheduleService.scheduleData,
+          Subject: prop.title,
+          Id: prop.schedule_id,
+          StartTime: prop.time,
+          EndTime: prop.time_end,
+          Description: prop.description,
+          Color: '#000000',
+        };
+      });
+      this.eventSettings = {
+        dataSource: this.data as any,
+      };
+    });
+  }
+
   onActionBegin(args: { requestType: string; data: any; cancel: boolean }) {
     let data: {
       Subject: string;

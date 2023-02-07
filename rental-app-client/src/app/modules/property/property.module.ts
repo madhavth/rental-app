@@ -17,8 +17,8 @@ import {
   MonthAgendaService,
 } from '@syncfusion/ej2-angular-schedule';
 import { SchedularComponent } from 'src/app/common/schedular/schedular.component';
-import {LeafletModule} from "@asymmetrik/ngx-leaflet";
-import {MapComponent} from "../../pages/properties/add-property/map.component";
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { MapComponent } from '../../pages/properties/add-property/map.component';
 import { SchedulesModule } from '../schedules/schedules.module';
 @NgModule({
   declarations: [
@@ -40,7 +40,7 @@ import { SchedulesModule } from '../schedules/schedules.module';
       { path: ':property_id', component: PropertyComponent },
     ]),
     HomeModule,
-    LeafletModule
+    LeafletModule,
     SchedulesModule,
   ],
   providers: [
