@@ -25,12 +25,12 @@ module.exports.addToFavorites = async (req, res, next) => {
   try {
     const property = await Property.findOne({
       _id: req.body.property_id,
-      user_id: {
-        $ne: req.userData.userId,
-      },
+      // user_id: {
+      //   $ne: req.userData.userId,
+      // },
     });
 
-    if (!property) {
+    if (property && property._id.toString() === req.body.property_id) {
       return next(
         new Error(
           "Property not found or user is not allowed to add to favorites"
@@ -65,7 +65,7 @@ module.exports.removeFromFavorites = async (req, res, next) => {
 
     const result = await User.updateOne(
       {
-        user_id: req.userData.userId,
+        _id: req.userData.userId,
       },
       {
         $pull: { favorite_properties: req.params.property_id },
