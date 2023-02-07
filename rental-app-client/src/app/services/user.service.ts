@@ -18,8 +18,15 @@ export class UserService {
     lastName: '',
   } as User);
 
+  private userLoginState = new BehaviorSubject<boolean>(false);
+
+  getUserLoginState$ = this.userLoginState.asObservable();
+
   getUserState$ = this.userState.asObservable();
+
   setUserState(user: User) {
+    const isLoggedIn = user.token !== undefined && user.token !== '';
+    this.userLoginState.next(isLoggedIn);
     this.userState.next(user);
   }
 

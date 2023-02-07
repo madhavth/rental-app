@@ -1,5 +1,6 @@
 const { uploadImage } = require("../config/cloudinary");
 const Property = require("../model/propertyModel");
+const fs = require("fs");
 
 const defaultPerPage = 10;
 
@@ -218,6 +219,11 @@ module.exports.deletePropertyById = async (req, res, next) => {
 module.exports.uploadPropertyImages = async (req, res, next) => {
   try {
     const { _id } = req.body;
+
+    if (!fs.existsSync("assets/pics")) {
+      fs.mkdir("assets/pics");
+    }
+
     let propertyImages = [];
     if (req.files !== undefined) {
       if (req.files.length > 0) {
