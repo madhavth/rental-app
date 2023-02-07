@@ -131,7 +131,6 @@ export class HomeComponent {
   }
 
   constructor() {
-    console.log(this.location);
     this.getLocation();
     if (this.properties?.length === 0) {
       this.propertyService.getTrendingProperties().subscribe((response) => {
@@ -146,8 +145,9 @@ export class HomeComponent {
         });
       });
     }
-
-    this.getNearByProperties();
+    if (this.lat && this.lng) {
+      this.getNearByProperties();
+    }
   }
 
   navigateTo(_id: string) {
@@ -155,7 +155,6 @@ export class HomeComponent {
   }
 
   getLocation() {
-    console.log(location);
     if (navigator.geolocation) {
       this.location = navigator.geolocation;
       navigator.geolocation.getCurrentPosition(

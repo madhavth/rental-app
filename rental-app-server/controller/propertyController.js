@@ -93,6 +93,8 @@ const paginatedResult = async (
     .skip(size * page)
     .sort(sort);
 
+  query.location = undefined;
+
   return {
     success: true,
     data: {

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { CardComponent } from 'src/app/components/card/card.component';
 import { CarouselComponent } from 'src/app/components/carousel/carousel.component';
 import { SliderComponent } from 'src/app/components/slider/slider.component';
+import { SearchComponent } from 'src/app/pages/search/search.component';
 
 @NgModule({
   declarations: [
@@ -12,11 +13,18 @@ import { SliderComponent } from 'src/app/components/slider/slider.component';
     CardComponent,
     CarouselComponent,
     SliderComponent,
+    SearchComponent,
   ],
 
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: HomeComponent }]),
+    RouterModule.forChild([
+      { path: '', component: HomeComponent },
+      {
+        path: 'search',
+        component: SearchComponent,
+      },
+    ]),
   ],
   exports: [CardComponent, CarouselComponent, SliderComponent],
 })

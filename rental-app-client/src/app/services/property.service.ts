@@ -21,12 +21,16 @@ export class PropertyService {
     metaData: {},
   };
 
-  getAllProprties() {
+  getAllProprties(name: string) {
     return this.http
       .get<{
         success: boolean;
         data: { properties: Array<Property>; metadata: MetaData };
-      }>(`${environment.SERVER}/properties`)
+      }>(`${environment.SERVER}/properties`, {
+        params: {
+          name: name,
+        },
+      })
       .pipe(map((response) => response.data));
   }
 

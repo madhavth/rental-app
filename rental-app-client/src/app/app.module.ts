@@ -13,6 +13,7 @@ import {
   BrowserAnimationsModule,
   NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
 
 function initializeAppFactory(userService: UserService): () => void {
   return () => {
@@ -31,6 +32,7 @@ function initializeAppFactory(userService: UserService): () => void {
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     NoopAnimationsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       {
         path: '',
