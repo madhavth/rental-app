@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import * as Leaflet from 'leaflet';
 
 Leaflet.Icon.Default.imagePath = 'assets/';
@@ -7,6 +7,7 @@ Leaflet.Icon.Default.imagePath = 'assets/';
   selector: 'app-map',
   template: `
     <div
+      style="{{style}}"
       class="map-container"
       leaflet
       [leafletOptions]="options"
@@ -14,13 +15,20 @@ Leaflet.Icon.Default.imagePath = 'assets/';
       (leafletClick)="mapClicked($event)"
     ></div>
   `,
-  styleUrls: ['./app.component.css'],
+  // styleUrls: ['./app.component.css'],
 })
 export class MapComponent {
+  @Input() style: string = "height: 400px;";
+  @Input() isReadOnly: boolean = false;
+  @Input() markerPosition: { lat: number; lng: number } = {
+    lat: 41.025248138565395,
+    lng: -91.96746201243195
+  };
   @Output() markerChangeCallBack = new EventEmitter<{
     lat: number;
     lng: number;
   }>();
+
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
   options = {
@@ -31,13 +39,13 @@ export class MapComponent {
       }),
     ],
     zoom: 16,
-    center: {lat: 41.025248138565395, lng: -91.96746201243195},
+    center: this.markerPosition,
   };
 
   //41.025248138565395, -91.96746201243195
   myMarker = Leaflet.marker(
-    {lat: 41.025248138565395, lng: -91.96746201243195},
-    {draggable: true}
+    this.markerPosition,
+    {draggable: !this.isReadOnly}
   ).on('click', (event) => this.markerChanged(event))
     .on('dragend', (event) => this.markerChanged(event));
 
@@ -92,14 +100,29 @@ export class MapComponent {
   }
 
   mapClicked($event: any) {
+    if (this.isReadOnly) {
+      this.map.panTo($event.latlng);
+      return;
+    }
+
     this.markerChanged($event);
   }
 
   markerClicked($event: any, index: number) {
+    if (this.isReadOnly) {
+      this.map.panTo($event.latlng);
+      return;
+    }
+
     this.markerChanged($event);
   }
 
   markerDragEnd($event: any, index: number) {
+    if (this.isReadOnly) {
+      this.map.panTo($event.latlng);
+      return;
+    }
+
     this.markerChanged($event);
   }
 }

@@ -20,11 +20,9 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapComponent } from '../../pages/properties/add-property/map.component';
 import { SchedulesModule } from '../schedules/schedules.module';
 import { UserAuthGuard } from 'src/app/AuthGuard/user-auth.guard';
-import {SpinnerComponent} from "../../components/spinner/spinner.component";
 
 @NgModule({
   declarations: [
-    SpinnerComponent,
     MapComponent,
     AddPropertyComponent,
     FavoritePropertiesComponent,

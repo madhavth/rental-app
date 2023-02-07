@@ -6,9 +6,11 @@ import { CardComponent } from 'src/app/components/card/card.component';
 import { CarouselComponent } from 'src/app/components/carousel/carousel.component';
 import { SliderComponent } from 'src/app/components/slider/slider.component';
 import { SearchComponent } from 'src/app/pages/search/search.component';
+import {SpinnerComponent} from "../../components/spinner/spinner.component";
 
 @NgModule({
   declarations: [
+    SpinnerComponent,
     HomeComponent,
     CardComponent,
     CarouselComponent,
@@ -26,6 +28,6 @@ import { SearchComponent } from 'src/app/pages/search/search.component';
       },
     ]),
   ],
-  exports: [CardComponent, CarouselComponent, SliderComponent],
+  exports: [SpinnerComponent, CardComponent, CarouselComponent, SliderComponent],
 })
 export class HomeModule {}

@@ -32,9 +32,9 @@ import { Utils } from 'src/app/utils/Utils';
           </div>
         </div>
       <div class="flex w-4/5">
-        
+
       <div class="w-2/5 flex justify-start">
-    
+
         <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
         {{ property.name }}
         </h5>
@@ -42,7 +42,7 @@ import { Utils } from 'src/app/utils/Utils';
       <div *ngIf="user && property.user_id !== user.userId" class="w-3/5 flex justify-end">
       <button type="submit" (click)="addToFavorites()"  class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add to Favorites</button>
       </div>
-    </div>  
+    </div>
         <div class="flex items-baseline text-gray-900 dark:text-white">
           <span class="text-3xl font-semibold">$</span>
           <span class="text-5xl font-extrabold tracking-tight"
@@ -53,13 +53,19 @@ import { Utils } from 'src/app/utils/Utils';
             >/month</span
           >
         </div>
-      
+
         <div>
           <p class="my-4 font-light">
             {{property.description}}
           </p>
         </div>
         <div>Location</div>
+        <div class="" *ngIf="(property && property.location) as locations">
+          <app-map [markerPosition]="{lat: locations[0], lng: locations[1]}" [isReadOnly]="true"
+          style="width: 90%; height: 300px; display: inline-block; margin-top: 12px; margin-bottom: 12px;"
+          ></app-map>
+        </div>
+
         <ul role="list" class="space-y-5 my-7">
           <h5>Amenities</h5>
           <li class="flex space-x-3">
@@ -133,6 +139,7 @@ import { Utils } from 'src/app/utils/Utils';
         </button>
       </div>
     </div>
+
     <div class="flex w-4/5 mx-auto">
       <div class="w-2/5 flex justify-start">
         <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
@@ -141,8 +148,8 @@ import { Utils } from 'src/app/utils/Utils';
       </div>
       <div *ngIf="user && property.user_id !== user.userId" class="w-3/5 flex justify-end">
       <button type="submit" data-modal-target="defaultModal" data-modal-toggle="defaultModal"  class="focus:outline-none text-white bg-green-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add Review</button>
-      </div>  
-    </div>  
+      </div>
+    </div>
     <div *ngFor="let item of property.reviews" class="w-4/5 mx-auto">
       <app-review [reviewData]="item"/>
     </div>
@@ -171,7 +178,7 @@ import { Utils } from 'src/app/utils/Utils';
                     <input name="rating" id="rating" formControlName="rating" type="number" min="1" max="5" placeholder="Write your rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
               </div>
             </div>
-            
+
             <!-- Modal footer -->
             <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <button data-modal-hide="defaultModal" (click)="reviewProperty()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
@@ -190,7 +197,7 @@ import { Utils } from 'src/app/utils/Utils';
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="medium-modal">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    <span class="sr-only">Close modal</span> 
+                    <span class="sr-only">Close modal</span>
                 </button>
             </div>
 
