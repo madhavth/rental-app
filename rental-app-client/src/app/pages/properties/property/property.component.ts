@@ -27,9 +27,9 @@ import { Utils } from 'src/app/utils/Utils';
         {{ property.name }}
         </h5>
       </div>
-      <div *ngIf="property.user_id !== user.userId" class="w-3/5 flex justify-end">
+      <div *ngIf="user && property.user_id !== user.userId" class="w-3/5 flex justify-end">
       <button type="submit" (click)="addToFavorites()"  class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add to Favorites</button>
-      </div>    
+      </div>
     </div>  
         <div class="flex items-baseline text-gray-900 dark:text-white">
           <span class="text-3xl font-semibold">$</span>
@@ -113,7 +113,7 @@ import { Utils } from 'src/app/utils/Utils';
             >
           </li>
         </ul>
-        <button *ngIf="property.user_id !== user.userId"
+        <button *ngIf="user && property.user_id !== user.userId"
         data-modal-target="medium-modal" data-modal-toggle="medium-modal" class="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button"
         >
           Schedule an appointment
@@ -126,9 +126,9 @@ import { Utils } from 'src/app/utils/Utils';
           Reviews
         </h5>
       </div>
-      <div *ngIf="property.user_id !== user.userId" class="w-3/5 flex justify-end">
+      <div *ngIf="user && property.user_id !== user.userId" class="w-3/5 flex justify-end">
       <button type="submit" data-modal-target="defaultModal" data-modal-toggle="defaultModal"  class="focus:outline-none text-white bg-green-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add Review</button>
-      </div>    
+      </div>  
     </div>  
     <div *ngFor="let item of property.reviews" class="w-4/5 mx-auto">
       <app-review [reviewData]="item"/>
@@ -199,7 +199,7 @@ export class PropertyComponent {
   reviewForm = inject(FormBuilder).nonNullable.group({
     rating: '',
     comment: '',
-    user_id: `${this.user.firstName + ' ' + this.user.lastName}`,
+    user_id: `${this.user?.firstName + ' ' + this.user?.lastName}`,
   });
   constructor() {
     this.activatedRoute.paramMap
