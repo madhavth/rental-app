@@ -13,9 +13,9 @@ import { Utils } from 'src/app/utils/Utils';
   selector: 'app-property',
   template: `
     <div class="flex w-4/5 mx-auto">
-      <div class="w-2/5">
+      <div class="w-2/5" *ngIf="property">
         <app-carousel
-          [images]="property.propertyImages"
+          [images]="property!.propertyImages"
           [styles]="carouselStyle"
         ></app-carousel>
       </div>

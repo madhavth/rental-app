@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
         [images]="cardData.propertyImages"
         [styles]="carouselStyle"
       ></app-carousel>
-
       <div class="p-5">
         <div class="flex items-center justify-end">
           <div>

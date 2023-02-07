@@ -8,12 +8,13 @@ import { Component, Input } from '@angular/core';
       <div class="relative h-56 overflow-hidden rounded-lg {{ styles.height }}">
         <!-- Images -->
         <div
-          *ngFor="let image of images"
-          class="hidden duration-700 ease-in-out"
+          *ngFor="let image of images; let first = first"
+          [ngClass]="{ hidden: !first }"
+          class="duration-700 ease-in-out"
           data-carousel-item
         >
           <img
-            src="{{ image.img }}"
+            [src]="image.img"
             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
             alt="..."
           />
@@ -78,6 +79,6 @@ import { Component, Input } from '@angular/core';
   styles: [],
 })
 export class CarouselComponent {
-  @Input() images!: Array<{ img: string }>;
+  @Input() images: Array<{ img: string }> = [];
   @Input() styles!: { height: string };
 }
