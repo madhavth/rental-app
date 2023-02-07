@@ -30,14 +30,14 @@ module.exports.addToFavorites = async (req, res, next) => {
       // },
     });
 
-    if (property && property._id.toString() === req.body.property_id) {
-      return next(
-        new Error(
-          "Property not found or user is not allowed to add to favorites"
-        )
-      );
+    if(!property) {
+      return new Error("Property not found");
     }
-
+    
+    if(property.user_id.toString() === req.userData.userId) {
+      return new Error("User not allowed their own property to favorites");
+    }
+    
     const result = await User.updateOne(
       {
         _id: req.userData.userId,

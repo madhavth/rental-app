@@ -1,13 +1,14 @@
 import { Component, inject, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, mergeMap } from 'rxjs';
+import {catchError, map, mergeMap, of} from 'rxjs';
 import { Property } from 'src/app/model/property';
 import { Review } from 'src/app/model/review';
 import { Schedule } from 'src/app/model/schedule';
 import { PropertyService } from 'src/app/services/property.service';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { Utils } from 'src/app/utils/Utils';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-property',
@@ -20,7 +21,7 @@ import { Utils } from 'src/app/utils/Utils';
         ></app-carousel>
       </div>
       <div class="w-3/5 ml-3.5">
-      
+
       <div class="flex w-4/5  mt-5">
 
       <div class="w-2/5 flex justify-start">
@@ -29,7 +30,12 @@ import { Utils } from 'src/app/utils/Utils';
         {{ property.name }}
         </h5>
       </div>
-      <div *ngIf="user && property.user_id !== user.userId" class="w-3/5 flex justify-end">
+
+        <app-spinner *ngIf="isAddingToFavorite">
+        </app-spinner>
+
+
+      <div *ngIf="!isAddingToFavorite && user && property.user_id !== user.userId" class="w-3/5 flex justify-end">
       <button type="submit" (click)="addToFavorites()"  class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Add to Favorites</button>
       </div>
     </div>
@@ -108,7 +114,7 @@ import { Utils } from 'src/app/utils/Utils';
               >Beds - {{ property.property_features.beds }}</span
             >
           </li>
-        
+
 <li>
 <div class="flex items-center">
           <div>
@@ -131,11 +137,11 @@ import { Utils } from 'src/app/utils/Utils';
 </li>
         </ul>
       </div>
-     
+
     </div>
     <div class="w-4/5 mx-auto">
     <div>
-    <span class="text-3xl tracking-tight">  
+    <span class="text-3xl tracking-tight">
     Description
     </span>
   </div>
@@ -146,10 +152,10 @@ import { Utils } from 'src/app/utils/Utils';
           </p>
         </div>
       </div>
-     
+
       <div class="mx-auto w-4/5">
       <div>
-      <span class="text-3xl tracking-tight">    
+      <span class="text-3xl tracking-tight">
       Location
       </span>
     </div>
@@ -158,11 +164,11 @@ import { Utils } from 'src/app/utils/Utils';
           style="width: 100%; height: 300px; display: inline-block; margin-top: 12px; margin-bottom: 12px;"
           ></app-map>
         </div>
-       
+
       </div>
       <div class="flex w-4/5 mx-auto">
 
-      
+
 </div>
     <div class="flex w-4/5 mx-auto">
       <div class="w-2/5 flex justify-start">
@@ -271,12 +277,29 @@ export class PropertyComponent {
         if (data.success) this.router.navigate(['']);
       });
   }
+
+  isAddingToFavorite = false;
+  toastService = inject(ToastrService);
+
   addToFavorites() {
+    this.isAddingToFavorite = true;
+
     this.propertyService
       .addToFavorites(this.property._id!)
+      .pipe(catchError((err)=> {
+        this.isAddingToFavorite = false;
+        return of({success: false, message: err.message});
+      }))
       .subscribe((data) => {
-        if (data.success)
+        this.isAddingToFavorite = false;
+        if (data.success) {
+          this.toastService.success('Added to favorites', 'Success');
           this.router.navigate(['', 'properties', this.property._id]);
+        }
+        else {
+          console.log(data);
+          this.toastService.error('Could not add to favorites', 'Error');
+        }
       });
   }
   carouselStyle: {
