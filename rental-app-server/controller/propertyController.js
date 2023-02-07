@@ -1,18 +1,12 @@
 const { uploadImage } = require("../config/cloudinary");
 const Property = require("../model/propertyModel");
 const fs = require("fs");
+const { getUserData } = require("../middleware/authorization");
 
 const defaultPerPage = 10;
 
-const applyFilters = (req, res, show_all = req.query.show_all) => {
+const applyFilters = (req, res) => {
   const query = {};
-  show_all = show_all ? show_all : show_all === "true";
-
-  if (!show_all && req.userData) {
-    query.user_id = {
-      $ne: req.userData.userId,
-    };
-  }
 
   if (req.query.name) {
     query.name = {
@@ -65,11 +59,28 @@ const getMetaData = async (Model, req, res, query = {}) => {
   };
 };
 
-const paginatedResult = async (Model, req, res, next, query, sort, showAll) => {
+const paginatedResult = async (
+  Model,
+  req,
+  res,
+  next,
+  query,
+  sort,
+  show_all = req.query.show_all
+) => {
   const page = req.query.page || 0;
   const size = req.query.size || defaultPerPage;
 
-  const queries = applyFilters(req, res, showAll);
+  const queries = applyFilters(req, res);
+  const userData = getUserData(req, res);
+
+  show_all = show_all === "true";
+
+  if (!show_all && userData) {
+    query.user_id = {
+      $ne: userData.userId,
+    };
+  }
 
   const properties = await Model.find(
     { ...query, ...queries },
