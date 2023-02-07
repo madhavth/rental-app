@@ -12,7 +12,7 @@ import { UserService } from '../services/user.service';
 @Injectable({
   providedIn: 'root',
 })
-export class UserAuthGuard implements CanActivate {
+export class HomeGuard implements CanActivate {
   constructor(public userService: UserService, public router: Router) {}
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -23,13 +23,12 @@ export class UserAuthGuard implements CanActivate {
     | boolean
     | UrlTree {
     this.userService.getUserState$.subscribe((data) => {
-      if (!data.token) {
-        this.router.navigate(['', 'login']);
+      if (!data) {
+        this.router.navigate(['']);
       } else if (data.role === 'admin') {
         this.router.navigate(['', 'admin']);
       }
     });
-
     return true;
   }
 }

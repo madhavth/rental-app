@@ -14,6 +14,7 @@ import {
   NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HomeGuard } from './AuthGuard/home.guard';
 
 function initializeAppFactory(userService: UserService): () => void {
   return () => {
@@ -40,6 +41,7 @@ function initializeAppFactory(userService: UserService): () => void {
           import('./modules/home/home.module').then(
             (module) => module.HomeModule
           ),
+        canActivate: [HomeGuard],
       },
       {
         path: '',

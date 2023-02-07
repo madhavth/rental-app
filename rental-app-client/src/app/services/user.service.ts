@@ -18,15 +18,24 @@ export class UserService {
     lastName: '',
   } as User);
 
-  private userLoginState = new BehaviorSubject<boolean>(false);
+  private userLoginState = new BehaviorSubject<{
+    role: string;
+    isLoggedIn: boolean;
+  }>({ role: '', isLoggedIn: false });
 
   getUserLoginState$ = this.userLoginState.asObservable();
 
   getUserState$ = this.userState.asObservable();
 
   setUserState(user: User) {
-    const isLoggedIn = user.token !== undefined && user.token !== '';
-    this.userLoginState.next(isLoggedIn);
+    let setState = { role: '', isLoggedIn: false };
+    if (user.token !== undefined && user.token) {
+      setState = {
+        role: user.role!,
+        isLoggedIn: true,
+      };
+    }
+    this.userLoginState.next(setState);
     this.userState.next(user);
   }
 

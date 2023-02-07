@@ -33,7 +33,7 @@ export class LoginComponent {
             ...decoded,
           })
         );
-        this.router.navigate(['']);
+        this.router.navigate(decoded.role === 'admin' ? ['', 'admin'] : ['']);
       }
     });
   }
