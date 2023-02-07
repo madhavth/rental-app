@@ -12,6 +12,9 @@ export interface Property {
     bathrooms: number;
     beds: number;
   };
+  is_verified?: boolean;
+  is_rejected?: boolean;
+  is_rented?: boolean;
   propertyImages: Array<{ img: string }>;
   user_id?: string;
   price?: number;

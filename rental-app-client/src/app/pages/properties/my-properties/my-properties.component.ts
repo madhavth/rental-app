@@ -20,6 +20,7 @@ import { UserService } from 'src/app/services/user.service';
             <th scope="col" class="px-6 py-3">Name</th>
             <th scope="col" class="px-6 py-3">Description</th>
             <th scope="col" class="px-6 py-3">Image</th>
+            <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Price</th>
             <th scope="col" class="px-6 py-3">Action</th>
           </tr>
@@ -42,6 +43,13 @@ import { UserService } from 'src/app/services/user.service';
                   [styles]="carouselStyle"
                 ></app-carousel>
               </div>
+            </td>
+            <td class="w-32 p-4">
+              {{ data.is_verified ? 'Verified' : '' }}
+              <br />
+              {{ data.is_rented ? 'Already Rented' : 'Not Rented' }}
+              <br />
+              {{ data.is_rejected ? 'Rejected' : '' }}
             </td>
             <td class="w-32 p-4">
               {{ '$' + data.price }}
