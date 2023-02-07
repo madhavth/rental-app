@@ -156,40 +156,40 @@ module.exports.getSchedulesForUser = async (req, res, next) => {
           },
         },
       },
-      {
-        $group: {
-          _id: { owner_id: "$owner._id", schedule_id: "$_id" },
-          schedules: {
-            $push: {
-              property: "$property",
-              title: "$title",
-              description: "$description",
-              state: "$state",
-              time: "$time",
-              time_end: "$time_end",
-              buyer: "$buyer",
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          schedule_id: "$_id.schedule_id",
-          schedules: {
-            time: 1,
-            time_end: 1,
-            property: {
-              name: 1,
-              location: 1,
-            },
-            title: 1,
-            description: 1,
-            state: 1,
-            buyer: 1,
-          },
-        },
-      },
+      // {
+      //   $group: {
+      //     _id: { owner_id: "$owner._id", schedule_id: "$_id" },
+      //     schedules: {
+      //       $push: {
+      //         property: "$property",
+      //         title: "$title",
+      //         description: "$description",
+      //         state: "$state",
+      //         time: "$time",
+      //         time_end: "$time_end",
+      //         buyer: "$buyer",
+      //       },
+      //     },
+      //   },
+      // },
+      // {
+      //   $project: {
+      //     _id: 0,
+      //     schedule_id: "$_id.schedule_id",
+      //     schedules: {
+      //       time: 1,
+      //       time_end: 1,
+      //       property: {
+      //         name: 1,
+      //         location: 1,
+      //       },
+      //       title: 1,
+      //       description: 1,
+      //       state: 1,
+      //       buyer: 1,
+      //     },
+      //   },
+      // },
     ]);
 
     res.json({
