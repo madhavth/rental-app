@@ -18,12 +18,11 @@ Leaflet.Icon.Default.imagePath = 'assets/';
   // styleUrls: ['./app.component.css'],
 })
 export class MapComponent {
+  defaultPosition = {lat: 41.025248138565395, lng: -91.96746201243195};
+
   @Input() style: string = "height: 400px;";
   @Input() isReadOnly: boolean = false;
-  @Input() markerPosition: { lat: number; lng: number } = {
-    lat: 41.025248138565395,
-    lng: -91.96746201243195
-  };
+  @Input() markerPosition?: { lat: number; lng: number };
   @Output() markerChangeCallBack = new EventEmitter<{
     lat: number;
     lng: number;
@@ -44,7 +43,7 @@ export class MapComponent {
 
   //41.025248138565395, -91.96746201243195
   myMarker = Leaflet.marker(
-    this.markerPosition,
+    this.markerPosition || this.defaultPosition,
     {draggable: !this.isReadOnly}
   ).on('click', (event) => this.markerChanged(event))
     .on('dragend', (event) => this.markerChanged(event));
@@ -67,6 +66,7 @@ export class MapComponent {
     //   this.map.panTo(data.position);
     //   this.markers.push(marker)
     // }
+    this.myMarker.setLatLng(this.markerPosition || this.defaultPosition);
 
     this.myMarker
       .addTo(this.map)
@@ -75,6 +75,7 @@ export class MapComponent {
           this.myMarker.getLatLng().lng
         }</b>`
       );
+
     this.map.panTo(this.myMarker.getLatLng());
     this.markers.push(this.myMarker);
   }
