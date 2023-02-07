@@ -1,14 +1,23 @@
 const mongoose = require("mongoose");
 
+const locationSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["Point"],
+    required: true,
+  },
+  coordinates: {
+    type: [Number],
+    required: true,
+  },
+});
+
 const propertySchema = new mongoose.Schema(
   {
     name: String,
     price: Number,
     overall_rating: Number,
-    location: {
-      index: "2dsphere",
-      type: [Number],
-    },
+    location: [Number],
     reviews: [
       {
         comment: String,
@@ -40,7 +49,7 @@ const propertySchema = new mongoose.Schema(
     is_rejected: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   { timestamps: true }
 );
@@ -48,5 +57,13 @@ const propertySchema = new mongoose.Schema(
 propertySchema.index({ location: "2d" });
 
 const property = mongoose.model("Property", propertySchema);
+
+property.createIndexes((error) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Indexes created");
+  }
+});
 
 module.exports = property;

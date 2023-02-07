@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { PropertyService } from 'src/app/services/property.service';
-import { ToastrService } from 'ngx-toastr';
-import { mergeMap, pipe, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import {Component, inject} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {PropertyService} from 'src/app/services/property.service';
+import {ToastrService} from 'ngx-toastr';
+import {catchError, mergeMap, Observable, of, pipe, tap} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-add-property',
@@ -182,13 +182,15 @@ import { Router } from '@angular/router';
             </div>
           </div>
 
+          <app-spinner *ngIf="loading"></app-spinner>
 
-          <button
-            type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          <button *ngIf="!loading"
+                  type="submit"
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Add
           </button>
+
         </form>
       </div>
     </div>
@@ -196,8 +198,9 @@ import { Router } from '@angular/router';
   styles: [],
 })
 export class AddPropertyComponent {
-  markers: { lat: number; lng: number } = { lat: 41.025248138565395, lng: -91.96746201243195 };
+  markers: { lat: number; lng: number } = {lat: 41.025248138565395, lng: -91.96746201243195};
   propertyService = inject(PropertyService);
+  loading = false;
 
   myFormData = inject(FormBuilder).group({
     property_name: '',
@@ -212,34 +215,58 @@ export class AddPropertyComponent {
 
   selectedFiles!: FileList;
 
-  constructor(private toastService: ToastrService, private router: Router) {}
+  constructor(private toastService: ToastrService, private router: Router) {
+  }
 
   updateSelectedFiles(event: any) {
     this.selectedFiles = event.target.files;
   }
 
   submitForm() {
-    const combined = this.propertyService.uploadImages(this.selectedFiles).pipe(
-      mergeMap((response) => {
-        return this.propertyService.addProperties(
-          this.myFormData,
-          this.markers,
-          response.data
-        );
-      })
-    );
 
-    combined.subscribe((response) => {
-      if (response.success) {
-        this.toastService.success(response.message, 'Success');
-        this.router.navigate(['', 'properties', 'mine']);
-      } else {
-        this.toastService.error(response.message, 'Error');
-      }
-    });
+    try {
+      this.loading = true;
+      this.checkImagesSelected();
+
+      const combined = this.propertyService.uploadImages(this.selectedFiles).pipe(
+        mergeMap((response) => {
+          return this.propertyService.addProperties(
+            this.myFormData,
+            this.markers,
+            response.data
+          );
+        }),
+        catchError((err) => {
+          this.loading = false;
+          this.toastService.error('Something went wrong adding new property', 'Error');
+          return of({success: false, message: 'Something went wrong adding new property'});
+        }),
+      );
+
+      combined.subscribe((response) => {
+        this.loading = false;
+        if (response.success) {
+          this.toastService.success(response.message, 'Success');
+          this.router.navigate(['', 'properties', 'mine']);
+        } else {
+          this.toastService.error(response.message, 'Error');
+        }
+      });
+    } catch (e) {
+      this.loading = false;
+      this.toastService.error('Something went wrong adding new property', 'Error');
+    }
   }
 
   markerChanged(marker: { lat: number; lng: number }) {
     this.markers = marker;
   }
+
+  checkImagesSelected() {
+    if (this.selectedFiles === undefined || this.selectedFiles === null || this.selectedFiles.length === 0) {
+      this.toastService.error('Please select images', 'Error');
+    }
+  }
+
 }
+

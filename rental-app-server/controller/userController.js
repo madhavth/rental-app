@@ -6,6 +6,7 @@ const {
   getUserOnlyProperties,
   paginatedResult,
 } = require("./propertyController");
+const { getUserData } = require("../middleware/authorization");
 
 const login = async (req, res, next) => {
   try {
@@ -50,14 +51,15 @@ const signup = async (req, res, next) => {
 
 const userProperties = async (req, res, next) => {
   try {
+    const userData = await getUserData(req, res);
     const result = await paginatedResult(
       Property,
       req,
       res,
       next,
-      { user_id: req.userData.userId },
+      { user_id: userData.userId },
       {},
-      true
+      "true"
     );
     res.json(result);
   } catch (e) {

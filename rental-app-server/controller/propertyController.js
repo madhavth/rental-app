@@ -127,13 +127,14 @@ module.exports.getNearByProperties = async (req, res, next) => {
       is_verified: true,
       is_rented: false,
       location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [longitude, latitude],
-          },
-          $maxDistance: 10000,
-        },
+        $near: [longitude, latitude],
+        //     {
+        //   $geometry: {
+        //     type: "Point",
+        //     coordinates: [longitude, latitude],
+        //   },
+        //   $maxDistance: 10000,
+        // },
       },
     };
 
@@ -205,6 +206,11 @@ module.exports.addProperty = async (req, res, next) => {
 
     req.body.user_id = req.userData.userId;
 
+    // req.body.location = {
+    //   type: "Point",
+    //   coordinates: [req.body.location[0], req.body.location[1]],
+    // };
+
     const property = new Property(req.body);
     const result = await property.save();
 
@@ -217,6 +223,7 @@ module.exports.addProperty = async (req, res, next) => {
         : "Error while adding new property",
     });
   } catch (e) {
+    console.log(e);
     next(new Error("Error while adding new property"));
   }
 };
