@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 import { Review } from '../model/review';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup } from '@angular/forms';
-import IImage from "../model/image";
+import IImage from '../model/image';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,11 @@ export class PropertyService {
 
   updateProperty() {}
 
-  addProperties(formData: FormGroup, latLng: { lat: number; lng: number }, images: {img: string}[]) {
+  addProperties(
+    formData: FormGroup,
+    latLng: { lat: number; lng: number },
+    images: { img: string }[]
+  ) {
     const property: Property = {
       type: formData.get('type')?.value,
       name: formData.get('name')?.value,
@@ -100,9 +104,10 @@ export class PropertyService {
     // upload image using multi part form data
     const formData = new FormData();
     formData.append('image', filesList[0]);
-    return this.http.patch<{ success: boolean; message: string, data: IImage[] }>(
-      `${environment.SERVER}/properties/upload-property-images`,
-      formData
-    );
+    return this.http.patch<{
+      success: boolean;
+      message: string;
+      data: IImage[];
+    }>(`${environment.SERVER}/properties/upload-property-images`, formData);
   }
 }
