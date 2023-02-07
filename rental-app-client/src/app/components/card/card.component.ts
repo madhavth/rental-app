@@ -44,7 +44,7 @@ import { Router } from '@angular/router';
           </h5>
         </a>
         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {{ cardData.description }}
+          {{ cardData.description | slice : 0 : 100 }}{{ '....' }}
         </p>
         <div class="flex items-center justify-between">
           <span class="text-3xl font-bold text-gray-900 dark:text-white">

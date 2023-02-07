@@ -6,7 +6,13 @@ import { PropertyService } from 'src/app/services/property.service';
 @Component({
   selector: 'app-favorite-properties',
   template: `
-  <div class="flex">
+      <div class="relative overflow-x-auto m-5">
+    <h1
+        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+      >
+        My Favorites
+      </h1>
+  <div class="flex mt-5">
     <div class="flex items-center mr-4" *ngFor="let item of favorites">    
   <app-card       
       [cardData]="item"
@@ -14,6 +20,7 @@ import { PropertyService } from 'src/app/services/property.service';
       textData="Remove"
       />
     </div>
+</div>
 </div>
   `,
   styles: [],
@@ -25,7 +32,6 @@ export class FavoritePropertiesComponent {
   constructor() {
     this.propertyService.getAllFavorites().subscribe((response) => {
       this.favorites = response.data;
-      console.log(this.favorites);
     });
   }
   removeFavorites(property_id: string) {
@@ -35,7 +41,6 @@ export class FavoritePropertiesComponent {
         this.propertyService.getAllFavorites().subscribe((response) => {
           this.favorites = response.data;
         });
-        console.log(response);
       });
   }
 }

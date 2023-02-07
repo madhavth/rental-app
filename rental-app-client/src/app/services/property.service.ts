@@ -1,19 +1,18 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment.development';
-import {Property} from '../model/property';
-import {MetaData} from '../model/metaData';
-import {map} from 'rxjs';
-import {Review} from '../model/review';
-import {ToastrService} from "ngx-toastr";
-import {FormGroup} from "@angular/forms";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
+import { Property } from '../model/property';
+import { MetaData } from '../model/metaData';
+import { map } from 'rxjs';
+import { Review } from '../model/review';
+import { ToastrService } from 'ngx-toastr';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropertyService {
-  constructor(private http: HttpClient, private toastService: ToastrService) {
-  }
+  constructor(private http: HttpClient, private toastService: ToastrService) {}
 
   propertyData: { properties?: Array<Property>; metaData?: MetaData } = {
     properties: [],
@@ -57,7 +56,7 @@ export class PropertyService {
   addToFavorites(property_id: string) {
     return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/users/favorites`,
-      {property_id}
+      { property_id }
     );
   }
 
@@ -68,17 +67,14 @@ export class PropertyService {
   }
 
   removeFromFavorites(property_id: string) {
-    console.log(property_id);
     return this.http.delete<{ success: boolean; message: string }>(
       `${environment.SERVER}/users/favorites/${property_id}`
     );
   }
 
-  updateProperty() {
+  updateProperty() {}
 
-  }
-
-  addProperties(formData: FormGroup, latLng: { lat: number, lng: number }) {
+  addProperties(formData: FormGroup, latLng: { lat: number; lng: number }) {
     const property: Property = {
       type: formData.get('type')?.value,
       name: formData.get('name')?.value,
@@ -90,7 +86,7 @@ export class PropertyService {
         bedrooms: formData.get('no_of_bedrooms')?.value || 0,
         bathrooms: formData.get('no_of_bathrooms')?.value || 0,
         beds: formData.get('no_of_beds')?.value || 0,
-      }
+      },
     };
     return this.http.post<{ success: boolean; message: string }>(
       `${environment.SERVER}/properties`,
@@ -101,6 +97,5 @@ export class PropertyService {
   uploadImages(images: string[]) {
     // upload image using multi part form data
     const formData = new FormData();
-
   }
 }

@@ -1,7 +1,7 @@
-import {Component, inject, Input, Output} from '@angular/core';
-import {Property} from 'src/app/model/property';
-import {Router} from '@angular/router';
-import {AdminService} from "../../services/admin.service";
+import { Component, inject, Input, Output } from '@angular/core';
+import { Property } from 'src/app/model/property';
+import { Router } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'admin-app-card',
@@ -34,7 +34,7 @@ import {AdminService} from "../../services/admin.service";
 
           <span
             class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3"
-          >{{ property.avgRating?.rating }}</span
+            >{{ property.avgRating?.rating }}</span
           >
         </div>
         <a href="#">
@@ -45,7 +45,7 @@ import {AdminService} from "../../services/admin.service";
           </h5>
         </a>
         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {{ property.description }}
+          {{ property.description | slice : 0 : 100 }}{{ '....' }}
         </p>
         <div class="flex items-center justify-between">
           <span class="text-3xl font-bold text-gray-900 dark:text-white">
@@ -54,21 +54,24 @@ import {AdminService} from "../../services/admin.service";
         </div>
 
         <div class="flex justify-between mt-5">
-
-          <button class="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-full"
-                  (click)="acceptProperty(property._id)" [disabled]="loading">
+          <button
+            class="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-full"
+            (click)="acceptProperty(property._id)"
+            [disabled]="loading"
+          >
             <span class="fas fa-check"></span>
             Accept
           </button>
 
-          <button class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-full"
-                  (click)="rejectProperty(property._id)" [disabled]="loading">
+          <button
+            class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-full"
+            (click)="rejectProperty(property._id)"
+            [disabled]="loading"
+          >
             <span class="fas fa-times"></span>
             Reject
           </button>
-
         </div>
-
       </div>
     </div>
   `,
@@ -86,23 +89,25 @@ export class AdminCardComponent {
     height: ' md:h-48',
   };
 
-  constructor(private adminService: AdminService) {
-  }
+  constructor(private adminService: AdminService) {}
 
   acceptProperty(propertyId?: string) {
-    this.loading =true;
-    this.adminService.updatePropertyVerificationStatus(propertyId, true).subscribe((value) => {
-      this.loading =false;
-      this.adminService.getProperties(false);
-    });
+    this.loading = true;
+    this.adminService
+      .updatePropertyVerificationStatus(propertyId, true)
+      .subscribe((value) => {
+        this.loading = false;
+        this.adminService.getProperties(false);
+      });
   }
 
   rejectProperty(propertyId?: string) {
     this.loading = true;
-    this.adminService.updatePropertyVerificationStatus(propertyId, false).subscribe((value) => {
-      this.loading = false;
-      this.adminService.getProperties(false);
-    });
+    this.adminService
+      .updatePropertyVerificationStatus(propertyId, false)
+      .subscribe((value) => {
+        this.loading = false;
+        this.adminService.getProperties(false);
+      });
   }
-
 }

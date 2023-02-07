@@ -1,38 +1,44 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import * as Leaflet from 'leaflet';
-import {marker} from "leaflet";
-import {Observable} from "rxjs";
 
 Leaflet.Icon.Default.imagePath = 'assets/';
 
 @Component({
   selector: 'app-map',
   template: `
-    <div class="map-container"
-         leaflet
-         [leafletOptions]="options"
-         (leafletMapReady)="onMapReady($event)"
-         (leafletClick)="mapClicked($event)">
-    </div>
+    <div
+      class="map-container"
+      leaflet
+      [leafletOptions]="options"
+      (leafletMapReady)="onMapReady($event)"
+      (leafletClick)="mapClicked($event)"
+    ></div>
   `,
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class MapComponent {
-  @Output() markerChangeCallBack = new EventEmitter<{ lat: number, lng: number }>();
+  @Output() markerChangeCallBack = new EventEmitter<{
+    lat: number;
+    lng: number;
+  }>();
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
   options = {
     layers: [
       Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      })
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }),
     ],
     zoom: 16,
-    center: {lat: 41.025248138565395, lng: -91.96746201243195 }
-  }
+    center: { lat: 41.025248138565395, lng: -91.96746201243195 },
+  };
 
   //41.025248138565395, -91.96746201243195
-  myMarker = Leaflet.marker({lat: 41.025248138565395, lng: -91.96746201243195}, {draggable: true})
+  myMarker = Leaflet.marker(
+    { lat: 41.025248138565395, lng: -91.96746201243195 },
+    { draggable: true }
+  );
 
   initMarkers() {
     const initialMarkers = [
@@ -53,22 +59,28 @@ export class MapComponent {
     //   this.markers.push(marker)
     // }
 
-    this.myMarker.addTo(this.map).bindPopup(`<b>${this.myMarker.getLatLng().lat},  ${this.myMarker.getLatLng().lng}</b>`);
+    this.myMarker
+      .addTo(this.map)
+      .bindPopup(
+        `<b>${this.myMarker.getLatLng().lat},  ${
+          this.myMarker.getLatLng().lng
+        }</b>`
+      );
     this.map.panTo(this.myMarker.getLatLng());
     this.markers.push(this.myMarker);
   }
 
   markerChanged($event: any) {
-    // console.log($event);
-    // this.myMarker.addTo(this.map).bindPopup(`<b>${$event.latlng.lat},  ${$event.latlng.lng}</b>`);
     this.map.panTo($event.latlng);
     this.myMarker.setLatLng($event.latlng);
-    this.markerChangeCallBack.emit({lat: $event.latlng.lat, lng: $event.latlng.lng});
-    // this.markers.push(this.myMarker);
+    this.markerChangeCallBack.emit({
+      lat: $event.latlng.lat,
+      lng: $event.latlng.lng,
+    });
   }
 
   generateMarker(data: any, index: number) {
-    return Leaflet.marker(data.position, {draggable: data.draggable})
+    return Leaflet.marker(data.position, { draggable: data.draggable })
       .on('click', (event) => this.markerClicked(event, index))
       .on('dragend', (event) => this.markerDragEnd(event, index));
   }
@@ -80,14 +92,9 @@ export class MapComponent {
 
   mapClicked($event: any) {
     this.markerChanged($event);
-    console.log($event.latlng.lat, $event.latlng.lng);
   }
 
-  markerClicked($event: any, index: number) {
-    console.log($event.latlng.lat, $event.latlng.lng);
-  }
+  markerClicked($event: any, index: number) {}
 
-  markerDragEnd($event: any, index: number) {
-    console.log($event.target.getLatLng());
-  }
+  markerDragEnd($event: any, index: number) {}
 }
