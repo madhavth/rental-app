@@ -12,26 +12,16 @@ import { Utils } from 'src/app/utils/Utils';
 @Component({
   selector: 'app-property',
   template: `
-    <div class="flex w-4/5 mx-auto">
-      <div class="w-2/5" *ngIf="property">
+    <div class="flex w-4/5 mx-auto space-x-2">
+      <div class="w-2/5 h-1/5" *ngIf="property">
         <app-carousel
           [images]="property!.propertyImages"
           [styles]="carouselStyle"
         ></app-carousel>
       </div>
       <div class="w-3/5 ml-3.5">
-      <div class="flex items-center">
-          <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#BDBDBD" class="w-5">
-  <path d="M0 0h24v24H0z" fill="none"/>
-  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-</svg>
-          </div>
-          <div>
-            {{property.view_count}}
-          </div>
-        </div>
-      <div class="flex w-4/5">
+      
+      <div class="flex w-4/5  mt-5">
 
       <div class="w-2/5 flex justify-start">
 
@@ -53,19 +43,6 @@ import { Utils } from 'src/app/utils/Utils';
             >/month</span
           >
         </div>
-
-        <div>
-          <p class="my-4 font-light">
-            {{property.description}}
-          </p>
-        </div>
-        <div>Location</div>
-        <div class="" *ngIf="(property && property.location) as locations">
-          <app-map [markerPosition]="{lat: locations[0], lng: locations[1]}" [isReadOnly]="true"
-          style="width: 90%; height: 300px; display: inline-block; margin-top: 12px; margin-bottom: 12px;"
-          ></app-map>
-        </div>
-
         <ul role="list" class="space-y-5 my-7">
           <h5>Amenities</h5>
           <li class="flex space-x-3">
@@ -131,15 +108,62 @@ import { Utils } from 'src/app/utils/Utils';
               >Beds - {{ property.property_features.beds }}</span
             >
           </li>
-        </ul>
-        <button *ngIf="user && property.user_id !== user.userId"
+        
+<li>
+<div class="flex items-center">
+          <div>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#BDBDBD" class="w-5">
+  <path d="M0 0h24v24H0z" fill="none"/>
+  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+</svg>
+          </div>
+          <div>
+            {{ property.view_count}} views
+          </div>
+        </div>
+</li>
+<li>
+          <button *ngIf="user && property.user_id !== user.userId"
         data-modal-target="medium-modal" data-modal-toggle="medium-modal" class="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button"
         >
           Schedule an appointment
         </button>
+</li>
+        </ul>
       </div>
+     
     </div>
+    <div class="w-4/5 mx-auto">
+    <div>
+    <span class="text-3xl tracking-tight">  
+    Description
+    </span>
+  </div>
 
+      <div>
+          <p class="my-4 font-light">
+            {{property.description}}
+          </p>
+        </div>
+      </div>
+     
+      <div class="mx-auto w-4/5">
+      <div>
+      <span class="text-3xl tracking-tight">    
+      Location
+      </span>
+    </div>
+        <div class="" *ngIf="(property && property.location) as locations">
+          <app-map [markerPosition]="{lat: locations[0], lng: locations[1]}" [isReadOnly]="true"
+          style="width: 100%; height: 300px; display: inline-block; margin-top: 12px; margin-bottom: 12px;"
+          ></app-map>
+        </div>
+       
+      </div>
+      <div class="flex w-4/5 mx-auto">
+
+      
+</div>
     <div class="flex w-4/5 mx-auto">
       <div class="w-2/5 flex justify-start">
         <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">

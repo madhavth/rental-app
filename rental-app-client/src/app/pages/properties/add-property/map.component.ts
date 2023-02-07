@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as Leaflet from 'leaflet';
 
 Leaflet.Icon.Default.imagePath = 'assets/';
@@ -7,8 +7,8 @@ Leaflet.Icon.Default.imagePath = 'assets/';
   selector: 'app-map',
   template: `
     <div
-      style="{{style}}"
-      class="map-container"
+      style="{{ style }}"
+      class="map-container flex items-baseline z-0"
       leaflet
       [leafletOptions]="options"
       (leafletMapReady)="onMapReady($event)"
@@ -18,9 +18,9 @@ Leaflet.Icon.Default.imagePath = 'assets/';
   // styleUrls: ['./app.component.css'],
 })
 export class MapComponent {
-  defaultPosition = {lat: 41.025248138565395, lng: -91.96746201243195};
+  defaultPosition = { lat: 41.025248138565395, lng: -91.96746201243195 };
 
-  @Input() style: string = "height: 400px;";
+  @Input() style: string = 'height: 400px;';
   @Input() isReadOnly: boolean = false;
   @Input() markerPosition?: { lat: number; lng: number };
   @Output() markerChangeCallBack = new EventEmitter<{
@@ -42,10 +42,10 @@ export class MapComponent {
   };
 
   //41.025248138565395, -91.96746201243195
-  myMarker = Leaflet.marker(
-    this.markerPosition || this.defaultPosition,
-    {draggable: !this.isReadOnly}
-  ).on('click', (event) => this.markerChanged(event))
+  myMarker = Leaflet.marker(this.markerPosition || this.defaultPosition, {
+    draggable: !this.isReadOnly,
+  })
+    .on('click', (event) => this.markerChanged(event))
     .on('dragend', (event) => this.markerChanged(event));
 
   initMarkers() {
@@ -90,7 +90,7 @@ export class MapComponent {
   }
 
   generateMarker(data: any, index: number) {
-    return Leaflet.marker(data.position, {draggable: data.draggable})
+    return Leaflet.marker(data.position, { draggable: data.draggable })
       .on('click', (event) => this.markerClicked(event, index))
       .on('dragend', (event) => this.markerDragEnd(event, index));
   }
