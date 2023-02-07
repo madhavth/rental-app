@@ -45,7 +45,10 @@ export class SchedularComponent {
   public eventSettings!: EventSettingsModel;
 
   constructor() {
-    this.scheduleService.getAppointment(new Date()).subscribe((res) => {
+    this.fetchSchedules(new Date());
+  }
+  fetchSchedules(currentViewDate: Date) {
+    this.scheduleService.getAppointment(currentViewDate).subscribe((res) => {
       const buyer: CalendarModel[] = res.data.buyer.map((prop: Schedule) => {
         return {
           ...this.scheduleService.scheduleData,
@@ -72,6 +75,18 @@ export class SchedularComponent {
         dataSource: this.data,
       };
     });
+  }
+  onNavigation(args: {
+    action: string;
+    previousDate: Date;
+    currentDate: Date;
+  }) {
+    if (
+      args.action === 'date' &&
+      args.previousDate.getMonth() != args.currentDate.getMonth()
+    ) {
+      this.fetchSchedules(args.currentDate);
+    }
   }
 
   onActionBegin(args: { requestType: string; data: any; cancel: boolean }) {
