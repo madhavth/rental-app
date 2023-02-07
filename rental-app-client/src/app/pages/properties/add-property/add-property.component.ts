@@ -1,8 +1,8 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
-import {PropertyService} from 'src/app/services/property.service';
-import {ToastrService} from "ngx-toastr";
-import {mergeMap, pipe, tap} from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { PropertyService } from 'src/app/services/property.service';
+import { ToastrService } from 'ngx-toastr';
+import { mergeMap, pipe, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -160,12 +160,12 @@ import { Router } from '@angular/router';
             >
             <input
               type="file"
+              multiple
               (change)="updateSelectedFiles($event)"
               name="propertyImages"
               id="propertyImages"
               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              multiple
               required
             />
           </div>
@@ -196,7 +196,7 @@ import { Router } from '@angular/router';
   styles: [],
 })
 export class AddPropertyComponent {
-  markers: { lat: number; lng: number } = {lat: 0, lng: 0};
+  markers: { lat: number; lng: number } = { lat: 0, lng: 0 };
   propertyService = inject(PropertyService);
 
   myFormData = inject(FormBuilder).group({
@@ -210,14 +210,13 @@ export class AddPropertyComponent {
     no_of_beds: 0,
   });
 
-  selectedFiles!: FileList;
+  selectedFiles!: FileList[];
 
-  constructor(private toastService: ToastrService, private router: Router) {
-  }
+  constructor(private toastService: ToastrService, private router: Router) {}
 
   updateSelectedFiles(event: any) {
     this.selectedFiles = event.target.files;
-    console.log(this.selectedFiles);
+    console.log('THIS IS IT' + this.selectedFiles.length);
   }
 
   submitForm() {
@@ -225,23 +224,25 @@ export class AddPropertyComponent {
 
     const combined = this.propertyService.uploadImages(this.selectedFiles).pipe(
       mergeMap((response) => {
-        return this.propertyService.addProperties(this.myFormData, this.markers, response.data);
+        return this.propertyService.addProperties(
+          this.myFormData,
+          this.markers,
+          response.data
+        );
       })
-    )
+    );
 
     combined.subscribe((response) => {
       if (response.success) {
         this.toastService.success(response.message, 'Success');
         this.router.navigate(['', 'properties', 'my']);
-      }
-      else {
+      } else {
         this.toastService.error(response.message, 'Error');
       }
-
     });
   }
 
-  markerChanged(marker: { lat: number, lng: number }) {
+  markerChanged(marker: { lat: number; lng: number }) {
     this.markers = marker;
   }
 }

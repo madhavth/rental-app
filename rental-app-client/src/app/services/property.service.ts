@@ -8,6 +8,7 @@ import { Review } from '../model/review';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup } from '@angular/forms';
 import IImage from '../model/image';
+import PropertyResponse from '../model/propertyResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -30,11 +31,15 @@ export class PropertyService {
   }
 
   getNearByProperties() {
-    return this.http.get(`${environment.SERVER}/properties/nearby`);
+    return this.http.get<PropertyResponse>(
+      `${environment.SERVER}/properties/nearby`
+    );
   }
 
   getTrendingProperties() {
-    return this.http.get(`${environment.SERVER}/properties/trending`);
+    return this.http.get<PropertyResponse>(
+      `${environment.SERVER}/properties/trending`
+    );
   }
 
   getPropertyById(_id: string) {
@@ -100,10 +105,14 @@ export class PropertyService {
     );
   }
 
-  uploadImages(filesList: FileList) {
+  uploadImages(filesList: FileList[]) {
     // upload image using multi part form data
     const formData = new FormData();
-    formData.append('image', filesList[0]);
+
+    for (let file in filesList) {
+      formData.append('image', file);
+    }
+
     return this.http.patch<{
       success: boolean;
       message: string;

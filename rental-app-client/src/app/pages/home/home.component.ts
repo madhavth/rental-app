@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
             for renting the property of your choice
           </p>
           <a
+            *ngIf="!user"
             [routerLink]="['', 'signup']"
             class="inline-flex justify-center items-center py-3 px-5 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
           >
@@ -43,6 +44,7 @@ import { Router } from '@angular/router';
           </a>
           <a
             [routerLink]="['', 'login']"
+            *ngIf="!user"
             class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
           >
             Find the deals
@@ -77,7 +79,7 @@ import { Router } from '@angular/router';
       </h1>
       <app-slider
         sliderName="nearBySlider"
-        [items]="properties"
+        [items]="properties2"
         [callBackFn]="navigateTo"
       ></app-slider>
     </section>
@@ -92,17 +94,30 @@ import { Router } from '@angular/router';
   ],
 })
 export class HomeComponent {
+  userData = localStorage.getItem('USER_STATE');
+  user = JSON.parse(this.userData!);
   propertyService = inject(PropertyService);
   router = inject(Router);
   properties: Property[] | undefined = [];
+  properties2: Property[] | undefined = [];
   constructor() {
-    this.properties = this.propertyService.propertyData.properties;
-
     if (this.properties?.length === 0) {
-      this.propertyService.getAllProprties().subscribe((response) => {
-        this.propertyService.propertyData = response;
-        this.properties = response.properties;
+      this.propertyService.getTrendingProperties().subscribe((response) => {
+        this.properties = response.data.properties;
         this.properties.forEach((property) => {
+          property.avgRating = {
+            ...property.avgRating,
+            ...Utils.convertNumToArray(
+              Utils.calculatePropertyAverage(property.reviews)
+            ),
+          };
+        });
+      });
+    }
+    if (this.properties2?.length === 0) {
+      this.propertyService.getNearByProperties().subscribe((response) => {
+        this.properties2 = response.data.properties;
+        this.properties2.forEach((property) => {
           property.avgRating = {
             ...property.avgRating,
             ...Utils.convertNumToArray(
