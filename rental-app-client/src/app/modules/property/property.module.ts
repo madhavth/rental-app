@@ -16,10 +16,10 @@ import {
   AgendaService,
   MonthAgendaService,
 } from '@syncfusion/ej2-angular-schedule';
-import { SchedularComponent } from 'src/app/common/schedular/schedular.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapComponent } from '../../pages/properties/add-property/map.component';
 import { SchedulesModule } from '../schedules/schedules.module';
+import { UserAuthGuard } from 'src/app/AuthGuard/user-auth.guard';
 @NgModule({
   declarations: [
     MapComponent,
@@ -34,9 +34,21 @@ import { SchedulesModule } from '../schedules/schedules.module';
     ReactiveFormsModule,
 
     RouterModule.forChild([
-      { path: 'add', component: AddPropertyComponent },
-      { path: 'favorites', component: FavoritePropertiesComponent },
-      { path: 'my', component: MyPropertiesComponent },
+      {
+        path: 'add',
+        component: AddPropertyComponent,
+        canActivate: [UserAuthGuard],
+      },
+      {
+        path: 'favorites',
+        component: FavoritePropertiesComponent,
+        canActivate: [UserAuthGuard],
+      },
+      {
+        path: 'mine',
+        component: MyPropertiesComponent,
+        canActivate: [UserAuthGuard],
+      },
       { path: ':property_id', component: PropertyComponent },
     ]),
     HomeModule,

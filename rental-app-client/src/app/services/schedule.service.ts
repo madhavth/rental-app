@@ -17,7 +17,7 @@ export class ScheduleService {
     );
   }
 
-  getAppointment(selectedMonth: string) {
+  getAppointment(selectedMonth: Date) {
     return this.http.get<{ success: boolean; data: any }>(
       `${environment.SERVER}/users/schedules/?time=${selectedMonth}`
     );

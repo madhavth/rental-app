@@ -1,18 +1,18 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule} from '@angular/router';
-import {AppComponent} from './app.component';
-import {HeaderComponent} from './common/header/header.component';
-import {FooterComponent} from './common/footer/footer.component';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-import {UserService} from './services/user.service';
-import {UserAuthGuard} from './AuthGuard/user-auth.guard';
-import {HeaderInterceptor} from './interceptor/header.interceptor';
-import {HomeModule} from './modules/home/home.module';
-import {AdminModule} from './modules/admin/admin.module';
-import {AdminComponent} from './pages/admin/admin.component';
-import {ToastrModule} from "ngx-toastr";
-import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './common/header/header.component';
+import { FooterComponent } from './common/footer/footer.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UserService } from './services/user.service';
+import { UserAuthGuard } from './AuthGuard/user-auth.guard';
+import { HeaderInterceptor } from './interceptor/header.interceptor';
+import { ToastrModule } from 'ngx-toastr';
+import {
+  BrowserAnimationsModule,
+  NoopAnimationsModule,
+} from '@angular/platform-browser/animations';
 
 function initializeAppFactory(userService: UserService): () => void {
   return () => {
@@ -66,6 +66,7 @@ function initializeAppFactory(userService: UserService): () => void {
           import('./modules/schedules/schedules.module').then(
             (module) => module.SchedulesModule
           ),
+        canActivate: [UserAuthGuard],
       },
     ]),
   ],
@@ -83,6 +84,6 @@ function initializeAppFactory(userService: UserService): () => void {
     },
   ],
   bootstrap: [AppComponent],
-  exports: []
+  exports: [],
 })
 export class AppModule {}

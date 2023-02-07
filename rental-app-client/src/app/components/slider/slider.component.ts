@@ -93,7 +93,6 @@ export class SliderComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.slider = document.getElementById(this.sliderName);
-    console.log(this.slider);
     this.defaultTransform = 0;
   }
 }

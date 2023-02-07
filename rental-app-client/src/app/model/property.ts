@@ -16,4 +16,5 @@ export interface Property {
   user_id?: string;
   price?: number;
   avgRating?: { arr?: Array<number>; rating: number };
+  view_count?: number;
 }

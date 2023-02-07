@@ -219,8 +219,6 @@ export class AddPropertyComponent {
   }
 
   submitForm() {
-    console.log(this.myFormData.value);
-
     const combined = this.propertyService.uploadImages(this.selectedFiles).pipe(
       mergeMap((response) => {
         return this.propertyService.addProperties(
@@ -234,7 +232,7 @@ export class AddPropertyComponent {
     combined.subscribe((response) => {
       if (response.success) {
         this.toastService.success(response.message, 'Success');
-        this.router.navigate(['', 'properties', 'my']);
+        this.router.navigate(['', 'properties', 'mine']);
       } else {
         this.toastService.error(response.message, 'Error');
       }

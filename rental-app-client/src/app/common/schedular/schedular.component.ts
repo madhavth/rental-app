@@ -45,7 +45,7 @@ export class SchedularComponent {
   public eventSettings!: EventSettingsModel;
 
   constructor() {
-    this.scheduleService.getAppointment('2023-2-10').subscribe((res) => {
+    this.scheduleService.getAppointment(new Date()).subscribe((res) => {
       const buyer: CalendarModel[] = res.data.buyer.map((prop: Schedule) => {
         return {
           ...this.scheduleService.scheduleData,
