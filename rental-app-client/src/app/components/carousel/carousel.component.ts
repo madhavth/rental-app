@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-carousel',
   template: `
-    <div id="default-carousel" class="relative" data-carousel="static">
+    <div id="default-carousel" class="relative " data-carousel="static">
       <!-- Carousel wrapper -->
       <div class="relative h-56 overflow-hidden rounded-lg {{ styles.height }}">
         <!-- Images -->
@@ -13,11 +13,7 @@ import { Component, Input } from '@angular/core';
           class="duration-700 ease-in-out"
           data-carousel-item
         >
-          <img
-            [src]="image.img"
-            class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-            alt="..."
-          />
+          <img [src]="image.img" class="absolute block w-full " alt="..." />
         </div>
       </div>
 
