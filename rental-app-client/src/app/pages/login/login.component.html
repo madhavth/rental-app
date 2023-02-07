@@ -27,7 +27,10 @@
                             required="" formControlName="password" />
                     </div>
 
-                    <button type="submit"
+                  <app-spinner *ngIf="isLoggingIn" class="mr-2 mb-2 py-2.5 px-5 flex e-justify justify-right">
+                  </app-spinner>
+
+                    <button type="submit" *ngIf="!isLoggingIn"
                         class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         Login
                     </button>
