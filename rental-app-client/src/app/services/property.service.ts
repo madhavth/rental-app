@@ -97,7 +97,7 @@ export class PropertyService {
   ) {
     const property: Property = {
       type: formData.get('type')?.value,
-      name: formData.get('name')?.value,
+      name: formData.get('property_name')?.value,
       description: formData.get('description')?.value,
       price: formData.get('price')?.value,
       location: [latLng.lat, latLng.lng],
