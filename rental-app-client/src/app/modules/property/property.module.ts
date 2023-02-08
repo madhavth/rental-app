@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AddPropertyComponent } from 'src/app/pages/properties/add-property/add-property.component';
 import { FavoritePropertiesComponent } from 'src/app/pages/properties/favorite-properties/favorite-properties.component';
@@ -30,32 +30,33 @@ import { UserAuthGuard } from 'src/app/AuthGuard/user-auth.guard';
     MyPropertiesComponent,
     ReviewComponent,
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
 
-    RouterModule.forChild([
-      {
-        path: 'add',
-        component: AddPropertyComponent,
-        canActivate: [UserAuthGuard],
-      },
-      {
-        path: 'favorites',
-        component: FavoritePropertiesComponent,
-        canActivate: [UserAuthGuard],
-      },
-      {
-        path: 'mine',
-        component: MyPropertiesComponent,
-        canActivate: [UserAuthGuard],
-      },
-      {path: ':property_id', component: PropertyComponent},
-    ]),
-    HomeModule,
-    LeafletModule,
-    SchedulesModule,
-  ],
+        RouterModule.forChild([
+            {
+                path: 'add',
+                component: AddPropertyComponent,
+                canActivate: [UserAuthGuard],
+            },
+            {
+                path: 'favorites',
+                component: FavoritePropertiesComponent,
+                canActivate: [UserAuthGuard],
+            },
+            {
+                path: 'mine',
+                component: MyPropertiesComponent,
+                canActivate: [UserAuthGuard],
+            },
+            {path: ':property_id', component: PropertyComponent},
+        ]),
+        HomeModule,
+        LeafletModule,
+        SchedulesModule,
+        FormsModule,
+    ],
   providers: [
     DayService,
     WeekService,

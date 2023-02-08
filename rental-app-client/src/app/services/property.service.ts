@@ -88,7 +88,14 @@ export class PropertyService {
     );
   }
 
-  updateProperty() {}
+  updateProperty(property_id: string, is_rented: boolean) {
+    return this.http.patch<{ success: boolean; message: string }>(
+      `${environment.SERVER}/properties/${property_id}`,
+      {
+        is_rented: is_rented
+      }
+    );
+  }
 
   addProperties(
     formData: FormGroup,
