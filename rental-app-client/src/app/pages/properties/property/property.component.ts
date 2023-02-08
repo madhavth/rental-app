@@ -260,6 +260,10 @@ export class PropertyComponent {
     user_id: `${this.user?.firstName + ' ' + this.user?.lastName}`,
   });
   constructor() {
+    this.fetchDataFromApi();
+  }
+
+  fetchDataFromApi() {
     this.activatedRoute.paramMap
       .pipe(
         map((params) => params.get('property_id') as string),
@@ -282,7 +286,7 @@ export class PropertyComponent {
         this.reviewForm.value as unknown as Review
       )
       .subscribe((data) => {
-        if (data.success) this.router.navigate(['']);
+        if (data.success) this.fetchDataFromApi();
       });
   }
 
