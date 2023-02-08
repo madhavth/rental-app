@@ -17,9 +17,9 @@ import { UserService } from 'src/app/services/user.service';
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
+            <th scope="col" class="px-6 py-3">Image</th>
             <th scope="col" class="px-6 py-3">Name</th>
             <th scope="col" class="px-6 py-3">Description</th>
-            <th scope="col" class="px-6 py-3">Image</th>
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Price</th>
             <th scope="col" class="px-6 py-3">Action</th>
@@ -30,12 +30,6 @@ import { UserService } from 'src/app/services/user.service';
             *ngFor="let data of properties"
             class="bg-white border-b h-54 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
           >
-            <td class="w-32 p-4">
-              {{ data.name }}
-            </td>
-            <td class="w-32 p-4">
-              {{ data.description | slice : 0 : 50 }}{{ '....' }}
-            </td>
             <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
               <div>
                 <app-carousel
@@ -44,6 +38,13 @@ import { UserService } from 'src/app/services/user.service';
                 ></app-carousel>
               </div>
             </td>
+            <td class="w-32 p-4">
+              {{ data.name }}
+            </td>
+            <td class="w-32 p-4">
+              {{ data.description | slice : 0 : 50 }}{{ '....' }}
+            </td>
+
             <td class="w-32 p-4">
               {{ data.is_verified ? 'Verified' : '' }}
               <br />
